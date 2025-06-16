@@ -7,7 +7,7 @@ async function getCashfreePaymentLink(customerId, customerPhone, orderAmount) {
 
   try {
     const token = localStorage.getItem('token');
-    const response = await fetch("http://localhost:3000/api/cashfree/generate-payment-id", {
+    const response = await fetch("68.183.247.116:3000/api/cashfree/generate-payment-id", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -42,7 +42,7 @@ async function getCashfreePaymentStatus(order_id) {
 
   try {
     const token = localStorage.getItem('token');
-    const response = await fetch("http://localhost:3000/api/cashfree/check-payment", {
+    const response = await fetch("68.183.247.116:3000/api/cashfree/check-payment", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
