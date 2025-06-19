@@ -1191,7 +1191,7 @@ function createImageCell(item) {
   img.width = 91;
   img.height = 91;
   img.alt = item.name || "Product Image";
-  img.onerror = function () { this.src = "assets/images/product/p-1.png"; };
+  img.onerror = function () { this.src = DEFAULT_IMAGE; };
 
   try {
     img.src = item.image_url && item.image_url.data
