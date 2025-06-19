@@ -51,7 +51,7 @@ async function handleLogin(event) {
     event.preventDefault();
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
-    const response = await fetch('http://localhost:3000/api/customers/login', {
+    const response = await fetch('https://api.thebirdcart.com/api/customers/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -111,7 +111,7 @@ async function handleSignup(event) {
         document.getElementById('signupPassword').classList.add('error');
         return;
     }
-    const response = await fetch('http://localhost:3000/api/customers/register', {
+    const response = await fetch('https://api.thebirdcart.com/api/customers/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
