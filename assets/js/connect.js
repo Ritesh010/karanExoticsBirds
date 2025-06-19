@@ -6,14 +6,41 @@ const API_BASE_URL = 'https://api.thebirdcart.com/api';
 const DEFAULT_IMAGE = 'assets/img/pr2.png';
 
 const SHIPPING_CONFIG = {
+  // Legacy properties (kept for backward compatibility)
   pricePerCubicUnit: 0.5,
+  pricePerKg: 20,
+  
+  // Current properties
   minimumShipping: 50,
   maximumShipping: 500,
   freeShippingThreshold: 2000,
-  defaultDimensions: { length: 10, width: 10, height: 5 },
-  enableWeightShipping: false,
-  pricePerKg: 20,
-  quantityMultiplier: 1.1
+  defaultDimensions: { length: 6, width: 5, height: 5 },
+  enableWeightShipping: true,
+  quantityMultiplier: 1.1,
+  
+  // New tiered shipping rates
+  shippingTiers: [
+    {
+      maxDimensions: { length: 6, width: 5, height: 5 },
+      maxWeight: 0.5, // 500gm
+      cost: 50
+    },
+    {
+      maxDimensions: { length: 7, width: 6.5, height: 6.5 },
+      maxWeight: 1.0, // 1kg
+      cost: 80
+    },
+    {
+      maxDimensions: { length: 8, width: 8.5, height: 8.5 },
+      maxWeight: 2.0, // 2kg
+      cost: 110
+    },
+    {
+      maxDimensions: { length: 12, width: 12, height: 10.5 },
+      maxWeight: 5.0, // 5kg
+      cost: 180
+    }
+  ]
 };
 
 // ============================================================================
@@ -1716,12 +1743,12 @@ function calculateShipping(cartItems, cartSubtotal = 0) {
 
     return {
       cost: Math.round(totalShippingCost * 100) / 100,
-      details: 'Shipping calculated based on dimensions and quantity',
+      details: 'Shipping calculated based on tiered dimensions and weight',
       breakdown: breakdown,
       totalVolume: totalVolume,
       totalWeight: totalWeight,
       config: {
-        pricePerCubicUnit: SHIPPING_CONFIG.pricePerCubicUnit,
+        tiers: SHIPPING_CONFIG.shippingTiers,
         minimumShipping: SHIPPING_CONFIG.minimumShipping,
         maximumShipping: SHIPPING_CONFIG.maximumShipping
       }
@@ -1730,6 +1757,74 @@ function calculateShipping(cartItems, cartSubtotal = 0) {
     console.error('Error calculating shipping:', error);
     return createErrorShippingResult();
   }
+}
+
+function calculateItemShipping(item) {
+  try {
+    const dimensions = item.dimensions || SHIPPING_CONFIG.defaultDimensions;
+    const length = parseFloat(dimensions.length || SHIPPING_CONFIG.defaultDimensions.length);
+    const width = parseFloat(dimensions.width || SHIPPING_CONFIG.defaultDimensions.width);
+    const height = parseFloat(dimensions.height || SHIPPING_CONFIG.defaultDimensions.height);
+    const quantity = parseInt(item.quantity || 1);
+    const weight = parseFloat(item.weight || 0);
+
+    const itemVolume = length * width * height;
+    const totalWeight = weight * quantity;
+    
+    // Apply quantity multiplier to dimensions for multiple items
+    const effectiveLength = length * Math.pow(SHIPPING_CONFIG.quantityMultiplier, (quantity - 1) / 3);
+    const effectiveWidth = width * Math.pow(SHIPPING_CONFIG.quantityMultiplier, (quantity - 1) / 3);
+    const effectiveHeight = height * Math.pow(SHIPPING_CONFIG.quantityMultiplier, (quantity - 1) / 3);
+
+    // Find the appropriate shipping tier
+    const tier = findShippingTier(effectiveLength, effectiveWidth, effectiveHeight, totalWeight);
+    const shippingCost = tier.cost;
+
+    return {
+      itemId: item.product_id,
+      itemName: item.name || 'Unknown Product',
+      quantity: quantity,
+      dimensions: { length, width, height },
+      effectiveDimensions: { 
+        length: effectiveLength, 
+        width: effectiveWidth, 
+        height: effectiveHeight 
+      },
+      volume: itemVolume,
+      totalVolume: itemVolume * quantity,
+      weight: weight,
+      totalWeight: totalWeight,
+      cost: shippingCost,
+      tier: tier,
+      calculation: `Tier: ${tier.maxDimensions.length}×${tier.maxDimensions.width}×${tier.maxDimensions.height} (${tier.maxWeight}kg) = Rs${tier.cost}`
+    };
+  } catch (error) {
+    console.error('Error calculating item shipping:', error);
+    return createDefaultItemShipping(item);
+  }
+}
+
+function findShippingTier(length, width, height, weight) {
+  // Sort dimensions to handle any orientation
+  const sortedDimensions = [length, width, height].sort((a, b) => b - a);
+  
+  for (const tier of SHIPPING_CONFIG.shippingTiers) {
+    const tierDimensions = [tier.maxDimensions.length, tier.maxDimensions.width, tier.maxDimensions.height]
+      .sort((a, b) => b - a);
+    
+    const fitsInDimensions = sortedDimensions[0] <= tierDimensions[0] && 
+                            sortedDimensions[1] <= tierDimensions[1] && 
+                            sortedDimensions[2] <= tierDimensions[2];
+    
+    const fitsInWeight = weight <= tier.maxWeight;
+    
+    if (fitsInDimensions && fitsInWeight) {
+      return tier;
+    }
+  }
+  
+  // If no tier fits, return the largest tier
+  return SHIPPING_CONFIG.shippingTiers[SHIPPING_CONFIG.shippingTiers.length - 1];
 }
 
 function createFreeShippingResult() {
@@ -1762,52 +1857,8 @@ function createErrorShippingResult() {
   };
 }
 
-function calculateItemShipping(item) {
-  try {
-    const dimensions = item.dimensions || SHIPPING_CONFIG.defaultDimensions;
-    const length = parseFloat(dimensions.length || SHIPPING_CONFIG.defaultDimensions.length);
-    const width = parseFloat(dimensions.width || SHIPPING_CONFIG.defaultDimensions.width);
-    const height = parseFloat(dimensions.height || SHIPPING_CONFIG.defaultDimensions.height);
-    const quantity = parseInt(item.quantity || 1);
-    const weight = parseFloat(item.weight || 0);
-
-    const itemVolume = length * width * height;
-    let totalVolume = itemVolume * quantity;
-
-    const quantityFactor = Math.pow(SHIPPING_CONFIG.quantityMultiplier, quantity - 1);
-    totalVolume *= quantityFactor;
-
-    let volumeShipping = totalVolume * SHIPPING_CONFIG.pricePerCubicUnit;
-    let weightShipping = 0;
-
-    if (SHIPPING_CONFIG.enableWeightShipping && weight > 0) {
-      const totalWeight = weight * quantity;
-      weightShipping = totalWeight * SHIPPING_CONFIG.pricePerKg;
-    }
-
-    const shippingCost = Math.max(volumeShipping, weightShipping);
-
-    return {
-      itemId: item.product_id,
-      itemName: item.name || 'Unknown Product',
-      quantity: quantity,
-      dimensions: { length, width, height },
-      volume: itemVolume,
-      totalVolume: totalVolume,
-      weight: weight,
-      totalWeight: weight * quantity,
-      cost: shippingCost,
-      calculation: SHIPPING_CONFIG.enableWeightShipping ?
-        `Max(Volume: ${volumeShipping.toFixed(2)}, Weight: ${weightShipping.toFixed(2)})` :
-        `Volume: ${totalVolume.toFixed(2)} × Rs${SHIPPING_CONFIG.pricePerCubicUnit} = Rs${volumeShipping.toFixed(2)}`
-    };
-  } catch (error) {
-    console.error('Error calculating item shipping:', error);
-    return createDefaultItemShipping(item);
-  }
-}
-
 function createDefaultItemShipping(item) {
+  const defaultTier = SHIPPING_CONFIG.shippingTiers[0]; // Use first tier as default
   return {
     itemId: item.product_id || 'unknown',
     itemName: item.name || 'Unknown Product',
@@ -1817,8 +1868,9 @@ function createDefaultItemShipping(item) {
     totalVolume: 0,
     weight: 0,
     totalWeight: 0,
-    cost: SHIPPING_CONFIG.pricePerCubicUnit * 500,
-    calculation: 'Error - using default'
+    cost: defaultTier.cost,
+    tier: defaultTier,
+    calculation: 'Error - using default tier'
   };
 }
 
@@ -1875,7 +1927,20 @@ function updateShippingDisplay(shipping, shippingResult) {
   const shippingDetailsElement = document.getElementById("shipping-details");
   if (shippingDetailsElement) {
     shippingDetailsElement.textContent = shippingResult.details;
-    shippingDetailsElement.title = `Volume: ${shippingResult.totalVolume.toFixed(2)} cubic units`;
+    
+    // Create detailed tooltip with tier information
+    let tooltipText = `Total Volume: ${shippingResult.totalVolume.toFixed(2)} cubic units\n`;
+    tooltipText += `Total Weight: ${shippingResult.totalWeight.toFixed(2)} kg\n`;
+    if (shippingResult.breakdown.length > 0) {
+      tooltipText += `Shipping Tiers Used:\n`;
+      shippingResult.breakdown.forEach(item => {
+        if (item.tier) {
+          tooltipText += `${item.itemName}: ${item.tier.maxDimensions.length}×${item.tier.maxDimensions.width}×${item.tier.maxDimensions.height} (${item.tier.maxWeight}kg) - Rs${item.tier.cost}\n`;
+        }
+      });
+    }
+    
+    shippingDetailsElement.title = tooltipText;
   }
 }
 
