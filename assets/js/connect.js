@@ -6,37 +6,27 @@ const API_BASE_URL = 'https://api.thebirdcart.com/api';
 const DEFAULT_IMAGE = 'assets/img/pr2.png';
 
 const SHIPPING_CONFIG = {
-  // Legacy properties (kept for backward compatibility)
-  pricePerCubicUnit: 0.5,
-  pricePerKg: 20,
-  
-  // Current properties
   minimumShipping: 50,
   maximumShipping: 500,
   freeShippingThreshold: 2000,
-  defaultDimensions: { length: 6, width: 5, height: 5 },
   enableWeightShipping: true,
   quantityMultiplier: 1.1,
   
-  // New tiered shipping rates
+  // Weight-based shipping tiers
   shippingTiers: [
     {
-      maxDimensions: { length: 6, width: 5, height: 5 },
       maxWeight: 0.5, // 500gm
       cost: 50
     },
     {
-      maxDimensions: { length: 7, width: 6.5, height: 6.5 },
       maxWeight: 1.0, // 1kg
       cost: 80
     },
     {
-      maxDimensions: { length: 8, width: 8.5, height: 8.5 },
       maxWeight: 2.0, // 2kg
       cost: 110
     },
     {
-      maxDimensions: { length: 12, width: 12, height: 10.5 },
       maxWeight: 5.0, // 5kg
       cost: 180
     }
@@ -1726,15 +1716,13 @@ function calculateShipping(cartItems, cartSubtotal = 0) {
     }
 
     let totalShippingCost = 0;
-    let totalVolume = 0;
     let totalWeight = 0;
     const breakdown = [];
 
     cartItems.forEach(item => {
       const itemShipping = calculateItemShipping(item);
       totalShippingCost += itemShipping.cost;
-      totalVolume += itemShipping.volume;
-      totalWeight += itemShipping.weight;
+      totalWeight += itemShipping.totalWeight;
       breakdown.push(itemShipping);
     });
 
@@ -1743,9 +1731,8 @@ function calculateShipping(cartItems, cartSubtotal = 0) {
 
     return {
       cost: Math.round(totalShippingCost * 100) / 100,
-      details: 'Shipping calculated based on tiered dimensions and weight',
+      details: 'Shipping calculated based on weight tiers',
       breakdown: breakdown,
-      totalVolume: totalVolume,
       totalWeight: totalWeight,
       config: {
         tiers: SHIPPING_CONFIG.shippingTiers,
@@ -1761,42 +1748,23 @@ function calculateShipping(cartItems, cartSubtotal = 0) {
 
 function calculateItemShipping(item) {
   try {
-    const dimensions = item.dimensions || SHIPPING_CONFIG.defaultDimensions;
-    const length = parseFloat(dimensions.length || SHIPPING_CONFIG.defaultDimensions.length);
-    const width = parseFloat(dimensions.width || SHIPPING_CONFIG.defaultDimensions.width);
-    const height = parseFloat(dimensions.height || SHIPPING_CONFIG.defaultDimensions.height);
     const quantity = parseInt(item.quantity || 1);
     const weight = parseFloat(item.weight || 0);
-
-    const itemVolume = length * width * height;
     const totalWeight = weight * quantity;
-    
-    // Apply quantity multiplier to dimensions for multiple items
-    const effectiveLength = length * Math.pow(SHIPPING_CONFIG.quantityMultiplier, (quantity - 1) / 3);
-    const effectiveWidth = width * Math.pow(SHIPPING_CONFIG.quantityMultiplier, (quantity - 1) / 3);
-    const effectiveHeight = height * Math.pow(SHIPPING_CONFIG.quantityMultiplier, (quantity - 1) / 3);
 
-    // Find the appropriate shipping tier
-    const tier = findShippingTier(effectiveLength, effectiveWidth, effectiveHeight, totalWeight);
+    // Find the appropriate shipping tier based on weight
+    const tier = findShippingTier(totalWeight);
     const shippingCost = tier.cost;
 
     return {
       itemId: item.product_id,
       itemName: item.name || 'Unknown Product',
       quantity: quantity,
-      dimensions: { length, width, height },
-      effectiveDimensions: { 
-        length: effectiveLength, 
-        width: effectiveWidth, 
-        height: effectiveHeight 
-      },
-      volume: itemVolume,
-      totalVolume: itemVolume * quantity,
       weight: weight,
       totalWeight: totalWeight,
       cost: shippingCost,
       tier: tier,
-      calculation: `Tier: ${tier.maxDimensions.length}×${tier.maxDimensions.width}×${tier.maxDimensions.height} (${tier.maxWeight}kg) = Rs${tier.cost}`
+      calculation: `Weight: ${totalWeight.toFixed(2)}kg - Tier: up to ${tier.maxWeight}kg = Rs${tier.cost}`
     };
   } catch (error) {
     console.error('Error calculating item shipping:', error);
@@ -1804,26 +1772,14 @@ function calculateItemShipping(item) {
   }
 }
 
-function findShippingTier(length, width, height, weight) {
-  // Sort dimensions to handle any orientation
-  const sortedDimensions = [length, width, height].sort((a, b) => b - a);
-  
+function findShippingTier(weight) {
   for (const tier of SHIPPING_CONFIG.shippingTiers) {
-    const tierDimensions = [tier.maxDimensions.length, tier.maxDimensions.width, tier.maxDimensions.height]
-      .sort((a, b) => b - a);
-    
-    const fitsInDimensions = sortedDimensions[0] <= tierDimensions[0] && 
-                            sortedDimensions[1] <= tierDimensions[1] && 
-                            sortedDimensions[2] <= tierDimensions[2];
-    
-    const fitsInWeight = weight <= tier.maxWeight;
-    
-    if (fitsInDimensions && fitsInWeight) {
+    if (weight <= tier.maxWeight) {
       return tier;
     }
   }
   
-  // If no tier fits, return the largest tier
+  // If weight exceeds all tiers, return the largest tier
   return SHIPPING_CONFIG.shippingTiers[SHIPPING_CONFIG.shippingTiers.length - 1];
 }
 
@@ -1832,7 +1788,6 @@ function createFreeShippingResult() {
     cost: 0,
     details: `Free shipping (order above Rs${SHIPPING_CONFIG.freeShippingThreshold})`,
     breakdown: [],
-    totalVolume: 0,
     totalWeight: 0
   };
 }
@@ -1842,7 +1797,6 @@ function createEmptyCartShippingResult() {
     cost: 0,
     details: 'No items in cart',
     breakdown: [],
-    totalVolume: 0,
     totalWeight: 0
   };
 }
@@ -1852,7 +1806,6 @@ function createErrorShippingResult() {
     cost: SHIPPING_CONFIG.minimumShipping,
     details: 'Error calculating shipping - using minimum rate',
     breakdown: [],
-    totalVolume: 0,
     totalWeight: 0
   };
 }
@@ -1863,9 +1816,6 @@ function createDefaultItemShipping(item) {
     itemId: item.product_id || 'unknown',
     itemName: item.name || 'Unknown Product',
     quantity: 1,
-    dimensions: SHIPPING_CONFIG.defaultDimensions,
-    volume: 0,
-    totalVolume: 0,
     weight: 0,
     totalWeight: 0,
     cost: defaultTier.cost,
@@ -1928,14 +1878,13 @@ function updateShippingDisplay(shipping, shippingResult) {
   if (shippingDetailsElement) {
     shippingDetailsElement.textContent = shippingResult.details;
     
-    // Create detailed tooltip with tier information
-    let tooltipText = `Total Volume: ${shippingResult.totalVolume.toFixed(2)} cubic units\n`;
-    tooltipText += `Total Weight: ${shippingResult.totalWeight.toFixed(2)} kg\n`;
+    // Create detailed tooltip with weight and tier information
+    let tooltipText = `Total Weight: ${shippingResult.totalWeight.toFixed(2)} kg\n`;
     if (shippingResult.breakdown.length > 0) {
-      tooltipText += `Shipping Tiers Used:\n`;
+      tooltipText += `Weight Tiers Used:\n`;
       shippingResult.breakdown.forEach(item => {
         if (item.tier) {
-          tooltipText += `${item.itemName}: ${item.tier.maxDimensions.length}×${item.tier.maxDimensions.width}×${item.tier.maxDimensions.height} (${item.tier.maxWeight}kg) - Rs${item.tier.cost}\n`;
+          tooltipText += `${item.itemName}: ${item.totalWeight.toFixed(2)}kg (up to ${item.tier.maxWeight}kg) - Rs${item.tier.cost}\n`;
         }
       });
     }
