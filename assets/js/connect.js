@@ -1750,7 +1750,7 @@ function calculateItemShipping(item) {
   try {
     const quantity = parseInt(item.quantity || 1);
     const weight = parseFloat(item.weight || 0);
-    const totalWeight = weight * quantity;
+    const totalWeight = (weight * quantity)/1000;
 
     // Find the appropriate shipping tier based on weight
     const tier = findShippingTier(totalWeight);
