@@ -2,7 +2,7 @@
 // CONSTANTS AND CONFIGURATION
 // ============================================================================
 
-const API_BASE_URL = 'http://68.183.247.116:3000/api';
+const API_BASE_URL = 'https://api.thebirdcart.com/api';
 const DEFAULT_IMAGE = 'assets/img/pr2.png';
 
 const SHIPPING_CONFIG = {
