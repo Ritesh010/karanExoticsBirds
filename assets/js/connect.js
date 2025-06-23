@@ -11,7 +11,7 @@ const SHIPPING_CONFIG = {
   freeShippingThreshold: 2000,
   enableWeightShipping: true,
   quantityMultiplier: 1.1,
-  
+
   // Weight-based shipping tiers
   shippingTiers: [
     {
@@ -39,7 +39,7 @@ const SHIPPING_CONFIG = {
 
 function showLoader(message) {
   let loader = document.getElementById("loader");
-  
+
   // Create loader if it doesn't exist
   if (!loader) {
     loader = document.createElement('div');
@@ -59,14 +59,14 @@ function showLoader(message) {
       font-family: sans-serif;
       text-align: center;
     `;
-    
+
     const loaderText = document.createElement('span');
     loaderText.id = 'loaderText';
     loader.appendChild(loaderText);
-    
+
     document.body.appendChild(loader);
   }
-  
+
   const loaderText = document.getElementById("loaderText");
   loaderText.textContent = message;
   loader.style.display = "block";
@@ -401,7 +401,7 @@ async function renderProducts() {
 
 async function renderTopAndTrending() {
   showLoader('Loading top and trending products...');
-  
+
   try {
     const { topSellingItems, recentItems } = await topAndTrending();
     const topContainer = document.getElementById('top-selling');
@@ -494,7 +494,7 @@ function createProductContentDiv(productData) {
 
   const price = document.createElement('span');
   price.className = 'price';
-    price.textContent = productData.price
+  price.textContent = productData.price
     ? `Rs${parseFloat(productData.price).toFixed(0)}`
     : 'Price not available';
 
@@ -645,7 +645,7 @@ function createProductActionDiv(productData) {
 
 async function createCategories() {
   showLoader('Loading categories...');
-  
+
   try {
     const topAttributes = await getTopAttributes();
 
@@ -894,11 +894,11 @@ async function changePassword(event) {
       headers: getAuthHeaders(),
       body: JSON.stringify({ oldPassword, newPassword, confirmPassword })
     });
-    
+
     showLoader('Password changed successfully');
     document.getElementById('closeModal').click();
     getCartItemsLength();
-    
+
     setTimeout(hideLoader, 2000);
   } catch (error) {
     console.error('Change Password Error', error);
@@ -965,7 +965,7 @@ async function getCart() {
   if (!customerToken) {
     showLoader('Please Sign Up or Login to view cart. Redirecting...');
     setTimeout(() => {
-            hideLoader();
+      hideLoader();
       window.location.replace("signup.html");
     }, 2000);
     return null;
@@ -1465,7 +1465,7 @@ async function loadCustomerAddresses() {
     if (data.addresses && data.addresses.length > 0) {
       populateAddressFields(data.addresses);
     }
-      } catch (error) {
+  } catch (error) {
     if (error.message.includes('404')) {
       console.log('No addresses found for customer');
     } else {
@@ -1750,7 +1750,7 @@ function calculateItemShipping(item) {
   try {
     const quantity = parseInt(item.quantity || 1);
     const weight = parseFloat(item.weight || 0);
-    const totalWeight = (weight * quantity)/1000;
+    const totalWeight = (weight * quantity) / 1000;
 
     // Find the appropriate shipping tier based on weight
     const tier = findShippingTier(totalWeight);
@@ -1778,7 +1778,7 @@ function findShippingTier(weight) {
       return tier;
     }
   }
-  
+
   // If weight exceeds all tiers, return the largest tier
   return SHIPPING_CONFIG.shippingTiers[SHIPPING_CONFIG.shippingTiers.length - 1];
 }
@@ -1877,7 +1877,7 @@ function updateShippingDisplay(shipping, shippingResult) {
   const shippingDetailsElement = document.getElementById("shipping-details");
   if (shippingDetailsElement) {
     shippingDetailsElement.textContent = shippingResult.details;
-    
+
     // Create detailed tooltip with weight and tier information
     let tooltipText = `Total Weight: ${shippingResult.totalWeight.toFixed(2)} kg\n`;
     if (shippingResult.breakdown.length > 0) {
@@ -1888,7 +1888,7 @@ function updateShippingDisplay(shipping, shippingResult) {
         }
       });
     }
-    
+
     shippingDetailsElement.title = tooltipText;
   }
 }
@@ -1901,7 +1901,7 @@ async function placeOrder(event) {
   event.preventDefault();
 
   const customerToken = localStorage.getItem('token');
-    if (!customerToken) {
+  if (!customerToken) {
     showLoader('Please Sign Up or Login to place order. Redirecting...');
     setTimeout(() => {
       hideLoader();
@@ -1935,13 +1935,20 @@ async function placeOrder(event) {
 
     console.log('Placing order...');
     const orderResult = await submitOrder(cartData, addressData);
-
-    console.log('Order placed successfully:', orderResult);
-    showLoader(`Order placed successfully! Order ID: ${orderResult.order?.order_number || 'N/A'}`);
-    setTimeout(() => {
-      hideLoader();
-      //window.location.href = 'orders.html';
-    }, 3000);
+    if (orderResult.success) {
+      console.log('Order placed successfully:', orderResult);
+      showLoader(`Order placed successfully! Order ID: ${orderResult.order?.order_number || 'N/A'}`);
+      setTimeout(() => {
+        hideLoader();
+        window.location.href = 'index.html';
+      }, 3000);
+    } else {
+      showLoader('Payment Failed!')
+      setTimeout(() => {
+        hideLoader();
+        //window.location.href = 'orders.html';
+      }, 3000);
+    }
   } catch (error) {
     console.error('Error placing order:', error);
     showLoader(`Failed to place order: ${error.message}`);
@@ -1965,7 +1972,7 @@ function updateSubmitButton(button, isLoading, originalText = 'Place Order') {
 
 async function saveAddresses(addressData) {
   showLoader('Saving addresses...');
-  
+
   try {
     await Promise.allSettled([
       saveCustomerAddress('shipping', {
