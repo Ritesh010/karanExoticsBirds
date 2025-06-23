@@ -75,13 +75,13 @@ async function submitOrder(cartData, addressData) {
   try {
     const name = localStorage.getItem('firstName') || 'Guest';
     const phone = localStorage.getItem('phone') || '';
-    let cartTotal = document.getElementById('checkout-total').textContent;
+    const cartTotal = document.getElementById('checkout-total')?.textContent;
 
     if (!cartTotal || !phone || !cartData?.items?.length) {
-      throw new Error("Missing required order details.");
+      return { success: false, message: "Missing required order details." };
     }
 
-    // Step 1: Initiate payment session
+    // Step 1: Create payment session
     const { sessionId, orderId } = await getCashfreePaymentLink(
       name + cartData.items[0].customer_id,
       phone,
@@ -98,50 +98,57 @@ async function submitOrder(cartData, addressData) {
     // Step 2: Launch checkout
     const result = await cashfree.checkout(checkoutOptions);
 
-    // Step 3: Handle user cancellation or failure
-    if (result.error) {
-      console.warn("Payment error or user cancelled:", result.error);
+    // Process Steps 3–6 only if result exists
+    if (result) {
       const status = await getCashfreePaymentStatus(orderId);
-      return { success: false, message: `Payment failed. Status: ${status.status}` };
-    }
+      console.log("Payment status:", status);
 
-    // Step 4: Optional redirect handler
-    if (result.redirect) {
-      console.log("Redirect in process...");
-    }
+      // Handle errors or unsuccessful payment
+      if (result.error || status.status !== "SUCCESS") {
+        let message = "Payment failed or was not completed.";
 
-    // Step 5: Confirm success and verify payment
-    if (result.paymentDetails) {
-      const status = await getCashfreePaymentStatus(orderId);
-      console.log("Payment status response:", status);
-
-      if (status.status === "SUCCESS") {
-        // Send order to backend (uncomment when API is ready)
-        // await postOrder(cartData, addressData);
+        if (result.error?.message) {
+          message = result.error.message;
+        } else if (status.status === "FAILED") {
+          message = "Payment failed. Please try again.";
+        } else if (status.status === "PENDING") {
+          message = "Payment is pending. Please wait or contact support.";
+        }
 
         return {
-          success: true,
-          message: result.paymentDetails.paymentMessage || "Payment successful!",
+          success: false,
+          message: `${message} (Status: ${status.status})`,
         };
-      } else {
-        throw new Error(`Payment verification failed. Status: ${status.status}`);
       }
+
+      // Optional: log redirect
+      if (result.redirect) {
+        console.log("Payment redirect in progress...");
+      }
+
+      // Payment successful
+      return {
+        success: true,
+        message: result.paymentDetails?.paymentMessage || "Payment successful!",
+      };
     }
 
-    throw new Error("Unexpected result from checkout.");
+    // If result is null or undefined
+    return {
+      success: false,
+      message: "No response from payment gateway. Please try again.",
+    };
 
   } catch (error) {
     console.error("Payment process error:", error.message);
-    return { success: false, message: error.message || "An error occurred during checkout." };
+    return {
+      success: false,
+      message: error.message || "An unexpected error occurred during payment.",
+    };
   }
 }
 
-// Helper: Parse amount safely
-function parseAmount(value) {
-  if (!value) return null;
-  const cleaned = value.replace(/[^\d.]/g, '');
-  return parseFloat(cleaned) || null;
-}
+
 
 // Optional helper: API order submission
 async function postOrder(cartData, addressData) {
