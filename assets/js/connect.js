@@ -1869,7 +1869,7 @@ function updateShippingDisplay(shipping, shippingResult) {
       shippingElement.textContent = "Free";
       shippingElement.style.color = "green";
     } else {
-      shippingElement.textContent = `Rs${shipping.toFixed(0)}`;
+      shippingElement.textContent = `${shipping.toFixed(0)}`;
       shippingElement.style.color = "";
     }
   }

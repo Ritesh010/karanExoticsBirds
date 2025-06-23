@@ -135,7 +135,8 @@ async function submitOrder(cartData, addressData) {
           billing_address: formatAddress(addressData.billing),
           shipping_address: formatAddress(addressData.shipping),
           payment_method: getSelectedPaymentMethod(),
-          notes: document.getElementById('order-notes')?.value || ''
+          notes: document.getElementById('order-notes')?.value || '',
+          shipping_charges: parseInt(document.getElementById('checkout-shipping').textContent, 10)
         })
       });
     }
