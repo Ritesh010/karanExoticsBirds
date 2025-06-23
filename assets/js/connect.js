@@ -1986,25 +1986,25 @@ async function saveAddresses(addressData) {
   }
 }
 
-async function submitOrder(cartData, addressData) {
-  const orderData = {
-    items: cartData.items.map(item => ({
-      product_id: item.product_id,
-      quantity: item.quantity,
-      price: item.price
-    })),
-    shipping_address: formatAddress(addressData.shipping),
-    billing_address: formatAddress(addressData.billing),
-    payment_method: getSelectedPaymentMethod(),
-    subtotal: cartData.items.reduce((sum, item) => sum + parseFloat(item.total_price || 0), 0)
-  };
+// async function submitOrder(cartData, addressData) {
+//   const orderData = {
+//     items: cartData.items.map(item => ({
+//       product_id: item.product_id,
+//       quantity: item.quantity,
+//       price: item.price
+//     })),
+//     shipping_address: formatAddress(addressData.shipping),
+//     billing_address: formatAddress(addressData.billing),
+//     payment_method: getSelectedPaymentMethod(),
+//     subtotal: cartData.items.reduce((sum, item) => sum + parseFloat(item.total_price || 0), 0)
+//   };
 
-  return await makeApiRequest('/orders', {
-    method: 'POST',
-    headers: getAuthHeaders(),
-    body: JSON.stringify(orderData)
-  });
-}
+//   return await makeApiRequest('/orders', {
+//     method: 'POST',
+//     headers: getAuthHeaders(),
+//     body: JSON.stringify(orderData)
+//   });
+// }
 
 function formatAddress(address) {
   return `${address.line1} ${address.line2} ${address.country} ${address.postcode}`.trim();

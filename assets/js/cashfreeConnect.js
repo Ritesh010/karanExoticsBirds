@@ -98,7 +98,7 @@ async function submitOrder(cartData, addressData) {
     if (result.error) {
       console.error("Popup closed or payment error:", result.error);
       let status = await getCashfreePaymentStatus(orderId);
-      throw new Error(`Payment failed. Status: ${status.status}`);
+      return `Payment failed. Status: ${status.status}`;
     }
 
     // Step 4: Handle redirect (optional logic)
