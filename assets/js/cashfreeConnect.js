@@ -72,70 +72,92 @@ async function getCashfreePaymentStatus(order_id) {
 
 
 async function submitOrder(cartData, addressData) {
-  let name = localStorage.getItem('firstName');
-  let phone = localStorage.getItem('phone');
-  let cartTotal = document.getElementById('checkout-total').textContent;
-  console.log(cartTotal)
   try {
-    // Step 1: Get payment session and order ID
-    let { sessionId, orderId } = await getCashfreePaymentLink(
+    const name = localStorage.getItem('firstName') || 'Guest';
+    const phone = localStorage.getItem('phone') || '';
+    let cartTotal = document.getElementById('checkout-total').textContent;
+
+    if (!cartTotal || !phone || !cartData?.items?.length) {
+      throw new Error("Missing required order details.");
+    }
+
+    // Step 1: Initiate payment session
+    const { sessionId, orderId } = await getCashfreePaymentLink(
       name + cartData.items[0].customer_id,
       phone,
       cartTotal
     );
 
-    let checkoutOptions = {
+    const checkoutOptions = {
       paymentSessionId: sessionId,
       redirectTarget: "_modal",
     };
 
-    console.log(checkoutOptions);
+    console.log("Starting payment with:", checkoutOptions);
 
-    // Step 2: Start the checkout process
+    // Step 2: Launch checkout
     const result = await cashfree.checkout(checkoutOptions);
 
-    // Step 3: Handle errors in result
+    // Step 3: Handle user cancellation or failure
     if (result.error) {
-      console.error("Popup closed or payment error:", result.error);
-      let status = await getCashfreePaymentStatus(orderId);
-      return `Payment failed. Status: ${status.status}`;
+      console.warn("Payment error or user cancelled:", result.error);
+      const status = await getCashfreePaymentStatus(orderId);
+      return { success: false, message: `Payment failed. Status: ${status.status}` };
     }
 
-    // Step 4: Handle redirect (optional logic)
+    // Step 4: Optional redirect handler
     if (result.redirect) {
-      console.log("Payment is being redirected...");
+      console.log("Redirect in process...");
     }
 
-    // Step 5: Handle successful payment
+    // Step 5: Confirm success and verify payment
     if (result.paymentDetails) {
-      console.log("Payment completed. Verifying status...");
-      let status = await getCashfreePaymentStatus(orderId);
-      console.log(status)
+      const status = await getCashfreePaymentStatus(orderId);
+      console.log("Payment status response:", status);
+
       if (status.status === "SUCCESS") {
-        console.log(result.paymentDetails.paymentMessage);
-        return { success: true, message: result.paymentDetails.paymentMessage };
-        // return await makeApiRequest('/orders', {
-        //   method: 'POST',
-        //   headers: getAuthHeaders(),
-        //   body: JSON.stringify({
-        //     items: cartData.items,
-        //     billing_address: formatAddress(addressData.billing),
-        //     shipping_address: formatAddress(addressData.shipping),
-        //     payment_method: getSelectedPaymentMethod(),
-        //     notes: document.getElementById('order-notes')?.value || ''
-        //   })
+        // Send order to backend (uncomment when API is ready)
+        // await postOrder(cartData, addressData);
+
+        return {
+          success: true,
+          message: result.paymentDetails.paymentMessage || "Payment successful!",
+        };
       } else {
-        throw new Error(`Payment verification failed. Status: ${status}`);
+        throw new Error(`Payment verification failed. Status: ${status.status}`);
       }
     }
 
-    // Step 6: Fallback if none of the above blocks run
-    throw new Error("Unknown result from checkout process.");
+    throw new Error("Unexpected result from checkout.");
 
   } catch (error) {
-    console.error("Error occurred during payment:", error.message);
-    throw error; // Rethrow for upstream error handling
+    console.error("Payment process error:", error.message);
+    return { success: false, message: error.message || "An error occurred during checkout." };
   }
+}
+
+// Helper: Parse amount safely
+function parseAmount(value) {
+  if (!value) return null;
+  const cleaned = value.replace(/[^\d.]/g, '');
+  return parseFloat(cleaned) || null;
+}
+
+// Optional helper: API order submission
+async function postOrder(cartData, addressData) {
+  const response = await makeApiRequest('/orders', {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify({
+      items: cartData.items,
+      billing_address: formatAddress(addressData.billing),
+      shipping_address: formatAddress(addressData.shipping),
+      payment_method: getSelectedPaymentMethod(),
+      notes: document.getElementById('order-notes')?.value || ''
+    })
+  });
+
+  return response;
 }
 
 
