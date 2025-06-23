@@ -127,10 +127,17 @@ async function submitOrder(cartData, addressData) {
       }
 
       // Payment successful
-      return {
-        success: true,
-        message: result.paymentDetails?.paymentMessage || "Payment successful!",
-      };
+      return await makeApiRequest('/orders', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          items: cartData.items,
+          billing_address: formatAddress(addressData.billing),
+          shipping_address: formatAddress(addressData.shipping),
+          payment_method: getSelectedPaymentMethod(),
+          notes: document.getElementById('order-notes')?.value || ''
+        })
+      });
     }
 
     // If result is null or undefined
