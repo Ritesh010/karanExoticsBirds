@@ -561,7 +561,7 @@ async function renderProducts() {
     return;
   }
 
-  showLoader('Loading products...');
+  // showLoader('Loading products...');
   container.innerHTML = '<div class="loading">Loading products...</div>';
 
   try {
@@ -600,7 +600,7 @@ async function renderProducts() {
 }
 
 async function renderTopAndTrending() {
-  showLoader('Loading top and trending products...');
+  // showLoader('Loading top and trending products...');
 
   try {
     const { topSellingItems, recentItems } = await topAndTrending();
@@ -851,7 +851,7 @@ function createProductActionDiv(productData) {
 // ============================================================================
 
 async function createCategories() {
-  showLoader('Loading categories...');
+  // showLoader('Loading categories...');
 
   try {
     const topAttributes = await getTopAttributes();
@@ -1238,7 +1238,7 @@ async function deleteProductFromCart(product_id) {
   }
 
   try {
-    showLoader('Removing product from cart...');
+    // showLoader('Removing product from cart...');
     console.log(`Removing product ${product_id} from cart`);
 
     await makeApiRequest(`/cart/remove/${product_id}`, {
@@ -1296,7 +1296,7 @@ async function renderCart() {
     return;
   }
 
-  showLoader('Loading cart...');
+  // showLoader('Loading cart...');
   cartBody.innerHTML = '<tr><td colspan="6" class="text-center">Loading cart...</td></tr>';
 
   try {
@@ -1446,8 +1446,72 @@ function createQuantityCell(item) {
   input.min = 1;
   input.max = item.stock_quantity || 999;
 
+  const plusBtn = document.createElement("button");
+  plusBtn.className = "quantity-plus qty-btn";
+  plusBtn.innerHTML = '<i class="far fa-plus"></i>';
+  plusBtn.type = "button";
+
+  // Minus button click handler
+  minusBtn.addEventListener('click', async function(event) {
+    event.preventDefault();
+    const currentValue = parseInt(input.value);
+    if (currentValue > 1) {
+      const newValue = currentValue - 1;
+      input.value = newValue;
+      
+      // Disable button and show loading
+      minusBtn.disabled = true;
+      plusBtn.disabled = true;
+      input.disabled = true;
+      
+      minusBtn.innerHTML = '<i class="far fa-spinner fa-spin"></i>';
+      
+      try {
+        await updateProductInCart(item.product_id, newValue);
+      } finally {
+        // Re-enable buttons
+        minusBtn.disabled = false;
+        plusBtn.disabled = false;
+        input.disabled = false;
+        minusBtn.innerHTML = '<i class="far fa-minus"></i>';
+      }
+    }
+  });
+
+  // Plus button click handler
+  plusBtn.addEventListener('click', async function(event) {
+    event.preventDefault();
+    const currentValue = parseInt(input.value);
+    const maxValue = item.stock_quantity || 999;
+    
+    if (currentValue < maxValue) {
+      const newValue = currentValue + 1;
+      input.value = newValue;
+      
+      // Disable button and show loading
+      minusBtn.disabled = true;
+      plusBtn.disabled = true;
+      input.disabled = true;
+      
+      plusBtn.innerHTML = '<i class="far fa-spinner fa-spin"></i>';
+      
+      try {
+        await updateProductInCart(item.product_id, newValue);
+      } finally {
+        // Re-enable buttons
+        minusBtn.disabled = false;
+        plusBtn.disabled = false;
+        input.disabled = false;
+        plusBtn.innerHTML = '<i class="far fa-plus"></i>';
+      }
+    } else {
+      showErrorLoader(`Maximum quantity available is ${maxValue}`, 2000);
+    }
+  });
+
+  // Input change handler (for direct typing)
   let updateTimeout;
-  input.onchange = async (event) => {
+  input.addEventListener('change', async function(event) {
     event.preventDefault();
 
     if (updateTimeout) {
@@ -1456,19 +1520,40 @@ function createQuantityCell(item) {
 
     updateTimeout = setTimeout(async () => {
       const newQuantity = parseInt(input.value);
-      if (newQuantity > 0 && newQuantity <= (item.stock_quantity || 999)) {
-        await updateProductInCart(item.product_id, newQuantity);
+      const maxValue = item.stock_quantity || 999;
+      
+      if (newQuantity > 0 && newQuantity <= maxValue) {
+        // Disable controls during update
+        minusBtn.disabled = true;
+        plusBtn.disabled = true;
+        input.disabled = true;
+        
+        try {
+          await updateProductInCart(item.product_id, newQuantity);
+        } finally {
+          // Re-enable controls
+          minusBtn.disabled = false;
+          plusBtn.disabled = false;
+          input.disabled = false;
+        }
       } else {
-        showErrorLoader(`Please enter a quantity between 1 and ${item.stock_quantity || 999}`, 2000);
-        input.value = item.quantity;
+        showErrorLoader(`Please enter a quantity between 1 and ${maxValue}`, 2000);
+        input.value = item.quantity; // Reset to original value
       }
     }, 500);
-  };
+  });
 
-  const plusBtn = document.createElement("button");
-  plusBtn.className = "quantity-plus qty-btn";
-  plusBtn.innerHTML = '<i class="far fa-plus"></i>';
-  plusBtn.type = "button";
+  // Prevent manual input of invalid values
+  input.addEventListener('input', function(event) {
+    const value = parseInt(event.target.value);
+    const maxValue = item.stock_quantity || 999;
+    
+    if (value < 1) {
+      event.target.value = 1;
+    } else if (value > maxValue) {
+      event.target.value = maxValue;
+    }
+  });
 
   qtyDiv.appendChild(minusBtn);
   qtyDiv.appendChild(input);
@@ -1501,7 +1586,7 @@ async function renderMiniCart(event = null) {
     event.preventDefault();
   }
 
-  showLoader('Loading mini cart...');
+  //showLoader('Loading mini cart...')
 
   const miniCartContainer = document.querySelector('.woocommerce-mini-cart');
   if (!miniCartContainer) {
@@ -1647,7 +1732,7 @@ async function initializeCheckout() {
     return;
   }
 
-  showLoader('Initializing checkout...');
+  //showLoader('Initializing checkout...');
 
   try {
     await loadCustomerAddresses();
