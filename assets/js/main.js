@@ -431,14 +431,14 @@ window.onclick = (event) => {
 };
 
 // loader
-window.addEventListener("load", () => {
-      const loader = document.getElementById("loader");
-      const content = document.getElementById("main-content");
+// window.addEventListener("load", () => {
+//       const loader = document.getElementById("loader");
+//       const content = document.getElementById("main-content");
 
-      loader.classList.add("fade-out");
+//       loader.classList.add("fade-out");
 
-      setTimeout(() => {
-        loader.style.display = "none";
-        content.style.display = "block";
-      }, 500);
-    });
+//       setTimeout(() => {
+//         loader.style.display = "none";
+//         content.style.display = "block";
+//       }, 500);
+//     });
