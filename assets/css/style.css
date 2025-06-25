@@ -6266,7 +6266,7 @@ a.text-theme:hover,
 .ot-header .menu-area {
     position: relative;
     z-index: 2;
-    background-color: var(--white-color)
+    background-color: #00bbae0f
 }
 
 .ot-header .row {
