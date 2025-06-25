@@ -202,7 +202,17 @@
     margin-left: -132px;
 }
 
+.sticky-wrapper .row .col-auto:nth-child(1){
+    width: 15%;
+}
 
+.sticky-wrapper .row .header-logo {
+    padding: 0 0 !important;
+}
+
+.sticky-wrapper .row .header-logo img {
+    width: 56%;
+}
 
 @media (max-width: 768px) {
     .login-page .container {
