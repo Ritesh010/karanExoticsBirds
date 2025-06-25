@@ -294,7 +294,10 @@ function addLoaderStyles() {
 // ============================================================================
 
 // Initialize page based on document title
-createCategories();
+
+addEventListener("DOMContentLoaded", (event) => {
+  createCategories();
+})
 
 const pageHandlers = {
   'Shop Page': renderProducts,
