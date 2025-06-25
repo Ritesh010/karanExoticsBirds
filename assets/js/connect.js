@@ -34,11 +34,30 @@ const SHIPPING_CONFIG = {
 };
 
 // ============================================================================
-// LOADER FUNCTIONS
+// ENHANCED LOADER FUNCTIONS
 // ============================================================================
 
-function showLoader(message) {
+function showLoader(message, options = {}) {
   let loader = document.getElementById("loader");
+  let overlay = document.getElementById("loader-overlay");
+
+  // Create overlay if it doesn't exist
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'loader-overlay';
+    overlay.style.cssText = `
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9998;
+      backdrop-filter: blur(2px);
+    `;
+    document.body.appendChild(overlay);
+  }
 
   // Create loader if it doesn't exist
   if (!loader) {
@@ -51,32 +70,223 @@ function showLoader(message) {
       left: 50%;
       transform: translate(-50%, -50%);
       background: #fff;
-      padding: 20px 30px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      padding: 25px 35px;
+      border-radius: 12px;
+      border: none;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
       z-index: 9999;
-      font-family: sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       text-align: center;
+      min-width: 280px;
+      max-width: 400px;
+      animation: loaderFadeIn 0.3s ease-out;
     `;
 
-    const loaderText = document.createElement('span');
-    loaderText.id = 'loaderText';
-    loader.appendChild(loaderText);
+    // Create spinner
+    const spinner = document.createElement('div');
+    spinner.id = 'loader-spinner';
+    spinner.style.cssText = `
+      width: 40px;
+      height: 40px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #007bff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px auto;
+    `;
 
+    // Create text element
+    const loaderText = document.createElement('div');
+    loaderText.id = 'loaderText';
+    loaderText.style.cssText = `
+      color: #333;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.4;
+      margin: 0;
+    `;
+
+    // Create progress bar (optional)
+    const progressContainer = document.createElement('div');
+    progressContainer.id = 'loader-progress-container';
+    progressContainer.style.cssText = `
+      width: 100%;
+      height: 4px;
+      background: #f0f0f0;
+      border-radius: 2px;
+      margin-top: 15px;
+      overflow: hidden;
+      display: none;
+    `;
+
+    const progressBar = document.createElement('div');
+    progressBar.id = 'loader-progress-bar';
+    progressBar.style.cssText = `
+      height: 100%;
+      background: linear-gradient(90deg, #007bff, #0056b3);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.3s ease;
+    `;
+
+    progressContainer.appendChild(progressBar);
+    loader.appendChild(spinner);
+    loader.appendChild(loaderText);
+    loader.appendChild(progressContainer);
     document.body.appendChild(loader);
+
+    // Add CSS animations
+    addLoaderStyles();
   }
 
+  // Update loader content
   const loaderText = document.getElementById("loaderText");
-  loaderText.textContent = message;
+  const spinner = document.getElementById("loader-spinner");
+  const progressContainer = document.getElementById("loader-progress-container");
+
+  if (loaderText) {
+    loaderText.textContent = message || 'Loading...';
+  }
+
+  // Handle different loader types
+  if (options.type === 'progress') {
+    spinner.style.display = 'none';
+    progressContainer.style.display = 'block';
+    updateProgress(options.progress || 0);
+  } else if (options.type === 'success') {
+    spinner.innerHTML = '✓';
+    spinner.style.cssText += `
+      border: 3px solid #28a745;
+      color: #28a745;
+      font-size: 24px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: none;
+    `;
+    progressContainer.style.display = 'none';
+  } else if (options.type === 'error') {
+    spinner.innerHTML = '✕';
+    spinner.style.cssText += `
+      border: 3px solid #dc3545;
+      color: #dc3545;
+      font-size: 24px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: none;
+    `;
+    progressContainer.style.display = 'none';
+  } else {
+    // Default spinning loader
+    spinner.innerHTML = '';
+    spinner.style.cssText = `
+      width: 40px;
+      height: 40px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #007bff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px auto;
+    `;
+    progressContainer.style.display = 'none';
+  }
+
+  // Show loader with animation
+  overlay.style.display = "block";
   loader.style.display = "block";
+  
+  // Prevent body scroll
+  document.body.style.overflow = 'hidden';
+
+  // Auto-hide for success/error messages
+  if (options.autoHide && (options.type === 'success' || options.type === 'error')) {
+    setTimeout(() => {
+      hideLoader();
+    }, options.autoHide);
+  }
 }
 
 function hideLoader() {
   const loader = document.getElementById("loader");
+  const overlay = document.getElementById("loader-overlay");
+  
   if (loader) {
-    loader.style.display = "none";
+    loader.style.animation = 'loaderFadeOut 0.3s ease-in';
+    setTimeout(() => {
+      loader.style.display = "none";
+      loader.style.animation = '';
+    }, 300);
   }
+  
+  if (overlay) {
+    overlay.style.display = "none";
+  }
+  
+  // Restore body scroll
+  document.body.style.overflow = '';
+}
+
+function updateProgress(percentage) {
+  const progressBar = document.getElementById("loader-progress-bar");
+  if (progressBar) {
+    progressBar.style.width = `${Math.min(100, Math.max(0, percentage))}%`;
+  }
+}
+
+function showSuccessLoader(message, autoHide = 2000) {
+  showLoader(message, { type: 'success', autoHide });
+}
+
+function showErrorLoader(message, autoHide = 3000) {
+  showLoader(message, { type: 'error', autoHide });
+}
+
+function showProgressLoader(message, progress = 0) {
+  showLoader(message, { type: 'progress', progress });
+}
+
+function addLoaderStyles() {
+  if (document.getElementById('loader-styles')) return;
+
+  const style = document.createElement('style');
+  style.id = 'loader-styles';
+  style.textContent = `
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    @keyframes loaderFadeIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+    
+    @keyframes loaderFadeOut {
+      from {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+      }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  `;
+  document.head.appendChild(style);
 }
 
 // ============================================================================
@@ -240,10 +450,9 @@ function getAuthHeaders() {
 }
 
 function handleAuthError() {
-  showLoader('Your session has expired. Please login again.');
+  showErrorLoader('Your session has expired. Please login again.', 2000);
   localStorage.removeItem('token');
   setTimeout(() => {
-    hideLoader();
     window.location.replace("signup.html");
   }, 2000);
 }
@@ -258,8 +467,7 @@ async function getProducts() {
     return data.products || [];
   } catch (error) {
     console.error('Error fetching products:', error);
-    showLoader('Failed to load products. Please check your connection and try again.');
-    setTimeout(hideLoader, 3000);
+    showErrorLoader('Failed to load products. Please check your connection and try again.');
     return [];
   }
 }
@@ -270,15 +478,13 @@ async function getProduct(product_id) {
     const productId = urlParams.get('product_id') || product_id;
 
     if (!productId) {
-      showLoader('Product ID not found in URL. Redirecting to shop...');
+      showErrorLoader('Product ID not found in URL. Redirecting to shop...', 2000);
       setTimeout(() => {
-        hideLoader();
         window.location.href = 'shop.html';
       }, 2000);
       return;
     }
-
-    console.log('Loading product:', productId);
+        console.log('Loading product:', productId);
     const data = await makeApiRequest(`/products/${productId}`);
 
     console.log('Product data loaded successfully:', data);
@@ -292,14 +498,12 @@ async function getProduct(product_id) {
     console.error('Error loading product:', error);
 
     if (error.message.includes('404')) {
-      showLoader('Product not found. Redirecting to shop...');
+      showErrorLoader('Product not found. Redirecting to shop...', 2000);
       setTimeout(() => {
-        hideLoader();
         window.location.href = 'shop.html';
       }, 2000);
     } else {
-      showLoader('Failed to load product data. Please try again or return to shop.');
-      setTimeout(hideLoader, 3000);
+      showErrorLoader('Failed to load product data. Please try again or return to shop.');
     }
   }
 }
@@ -310,8 +514,7 @@ async function getProductsbyAttribute(key, value) {
     return data.products || [];
   } catch (error) {
     console.error('Error fetching products:', error);
-    showLoader('Failed to load products. Please check your connection and try again.');
-    setTimeout(hideLoader, 3000);
+    showErrorLoader('Failed to load products. Please check your connection and try again.');
     return [];
   }
 }
@@ -322,8 +525,7 @@ async function getTopAttributes() {
     return data.top_attributes || [];
   } catch (error) {
     console.error('Error fetching products:', error);
-    showLoader('Failed to load products. Please check your connection and try again.');
-    setTimeout(hideLoader, 3000);
+    showErrorLoader('Failed to load products. Please check your connection and try again.');
     return [];
   }
 }
@@ -341,8 +543,7 @@ async function topAndTrending() {
     };
   } catch (error) {
     console.error('Error fetching products:', error);
-    showLoader('Failed to load products. Please check your connection and try again.');
-    setTimeout(hideLoader, 3000);
+    showErrorLoader('Failed to load products. Please check your connection and try again.');
     return { topSellingItems: [], recentItems: [] };
   }
 }
@@ -356,8 +557,7 @@ async function renderProducts() {
 
   if (!container) {
     console.error('Products grid container not found');
-    showLoader('Page layout error. Please refresh the page.');
-    setTimeout(hideLoader, 3000);
+    showErrorLoader('Page layout error. Please refresh the page.');
     return;
   }
 
@@ -391,11 +591,11 @@ async function renderProducts() {
       container.appendChild(productCard);
     });
 
-    hideLoader();
+    showSuccessLoader(`Loaded ${products.length} products successfully!`, 1500);
   } catch (error) {
     console.error('Error rendering products:', error);
     container.innerHTML = '<div class="error">Failed to load products. Please try again later.</div>';
-    hideLoader();
+    showErrorLoader('Failed to render products. Please try again later.');
   }
 }
 
@@ -407,12 +607,17 @@ async function renderTopAndTrending() {
     const topContainer = document.getElementById('top-selling');
     const recentContainer = document.getElementById('recent-item');
 
+    let loadedCount = 0;
+    const totalItems = topSellingItems.length + recentItems.length;
+
     if (recentContainer) {
       for (const element of recentItems) {
         const product = await getProduct(element.product_id);
         if (product) {
           const productCard = createProductCard(product, 'index');
           recentContainer.appendChild(productCard);
+          loadedCount++;
+          showProgressLoader(`Loading products... (${loadedCount}/${totalItems})`, (loadedCount / totalItems) * 100);
         }
       }
     }
@@ -423,14 +628,16 @@ async function renderTopAndTrending() {
         if (product) {
           const productCard = createProductElement(product);
           topContainer.appendChild(productCard);
+          loadedCount++;
+          showProgressLoader(`Loading products... (${loadedCount}/${totalItems})`, (loadedCount / totalItems) * 100);
         }
       }
     }
 
-    hideLoader();
+    showSuccessLoader('Products loaded successfully!', 1500);
   } catch (error) {
     console.error('Error rendering top and trending:', error);
-    hideLoader();
+    showErrorLoader('Failed to load top and trending products.');
   }
 }
 
@@ -656,10 +863,10 @@ async function createCategories() {
       element.appendChild(menu.cloneNode(true));
     });
 
-    hideLoader();
+    showSuccessLoader('Categories loaded successfully!', 1000);
   } catch (error) {
     console.error('Error creating categories:', error);
-    hideLoader();
+    showErrorLoader('Failed to load categories.');
   }
 }
 
@@ -852,8 +1059,7 @@ async function cart(event) {
   const quantityElement = document.getElementById('quantity');
 
   if (!productIdElement || !quantityElement) {
-    showLoader('Page error: Required elements not found.');
-    setTimeout(hideLoader, 3000);
+    showErrorLoader('Page error: Required elements not found.');
     return;
   }
 
@@ -861,14 +1067,12 @@ async function cart(event) {
   const quantity = parseInt(quantityElement.value);
 
   if (!productId) {
-    showLoader('Product ID not found.');
-    setTimeout(hideLoader, 3000);
+    showErrorLoader('Product ID not found.');
     return;
   }
 
   if (isNaN(quantity) || quantity <= 0) {
-    showLoader('Please enter a valid quantity.');
-    setTimeout(hideLoader, 3000);
+    showErrorLoader('Please enter a valid quantity.');
     return;
   }
 
@@ -895,20 +1099,16 @@ async function changePassword(event) {
       body: JSON.stringify({ oldPassword, newPassword, confirmPassword })
     });
 
-    showLoader('Password changed successfully');
+    showSuccessLoader('Password changed successfully!', 2000);
     document.getElementById('closeModal').click();
     getCartItemsLength();
-
-    setTimeout(hideLoader, 2000);
   } catch (error) {
     console.error('Change Password Error', error);
 
     if (error.message.includes('401')) {
-      hideLoader();
       handleAuthError();
     } else {
-      showLoader(`Change Password Error: ${error.message}`);
-      setTimeout(hideLoader, 3000);
+      showErrorLoader(`Change Password Error: ${error.message}`);
     }
   }
 }
@@ -917,17 +1117,15 @@ async function addToCart(product_id, quantity) {
   const customerToken = localStorage.getItem('token');
 
   if (!customerToken) {
-    showLoader('Please Sign Up or Login to add items to cart. Redirecting...');
+    showErrorLoader('Please Sign Up or Login to add items to cart. Redirecting...', 2000);
     setTimeout(() => {
-      hideLoader();
       window.location.replace("signup.html");
     }, 2000);
     return;
   }
 
   if (!product_id || quantity <= 0) {
-    showLoader('Invalid product or quantity.');
-    setTimeout(hideLoader, 2000);
+    showErrorLoader('Invalid product or quantity.');
     return;
   }
 
@@ -942,19 +1140,15 @@ async function addToCart(product_id, quantity) {
       body: JSON.stringify({ product_id, quantity })
     });
 
-    showLoader('Product successfully added to cart!');
+    showSuccessLoader('Product successfully added to cart!', 2000);
     getCartItemsLength();
-
-    setTimeout(hideLoader, 2000);
   } catch (error) {
     console.error('Error adding to cart:', error);
 
     if (error.message.includes('401')) {
-      hideLoader();
       handleAuthError();
     } else {
-      showLoader(`Failed to add product to cart: ${error.message}`);
-      setTimeout(hideLoader, 3000);
+      showErrorLoader(`Failed to add product to cart: ${error.message}`);
     }
   }
 }
@@ -963,9 +1157,8 @@ async function getCart() {
   const customerToken = localStorage.getItem('token');
 
   if (!customerToken) {
-    showLoader('Please Sign Up or Login to view cart. Redirecting...');
+    showErrorLoader('Please Sign Up or Login to view cart. Redirecting...', 2000);
     setTimeout(() => {
-      hideLoader();
       window.location.replace("signup.html");
     }, 2000);
     return null;
@@ -980,11 +1173,9 @@ async function getCart() {
     console.error('Error fetching cart:', error);
 
     if (error.message.includes('401')) {
-      hideLoader();
       handleAuthError();
     } else {
-      showLoader('Failed to load cart data. Please try again.');
-      setTimeout(hideLoader, 3000);
+      showErrorLoader('Failed to load cart data. Please try again.');
     }
     return null;
   }
@@ -994,17 +1185,15 @@ async function updateProductInCart(product_id, quantity) {
   const customerToken = localStorage.getItem('token');
 
   if (!customerToken) {
-    showLoader('Please Sign Up or Login. Redirecting...');
+    showErrorLoader('Please Sign Up or Login. Redirecting...', 2000);
     setTimeout(() => {
-      hideLoader();
       window.location.replace("signup.html");
     }, 2000);
     return;
   }
 
   if (!product_id || quantity <= 0) {
-    showLoader('Invalid product or quantity.');
-    setTimeout(hideLoader, 2000);
+    showErrorLoader('Invalid product or quantity.');
     return;
   }
 
@@ -1020,16 +1209,14 @@ async function updateProductInCart(product_id, quantity) {
 
     getCartItemsLength();
     await renderCart();
-    hideLoader();
+    showSuccessLoader('Cart updated successfully!', 1500);
   } catch (error) {
     console.error('Error updating cart:', error);
 
     if (error.message.includes('401')) {
-      hideLoader();
       handleAuthError();
     } else {
-      showLoader(`Failed to update cart: ${error.message}`);
-      setTimeout(hideLoader, 3000);
+      showErrorLoader(`Failed to update cart: ${error.message}`);
     }
   }
 }
@@ -1038,17 +1225,15 @@ async function deleteProductFromCart(product_id) {
   const customerToken = localStorage.getItem('token');
 
   if (!customerToken) {
-    showLoader('Please Sign Up or Login. Redirecting...');
+    showErrorLoader('Please Sign Up or Login. Redirecting...', 2000);
     setTimeout(() => {
-      hideLoader();
       window.location.replace("signup.html");
     }, 2000);
     return;
   }
 
   if (!product_id) {
-    showLoader('Invalid product ID.');
-    setTimeout(hideLoader, 2000);
+    showErrorLoader('Invalid product ID.');
     return;
   }
 
@@ -1061,19 +1246,16 @@ async function deleteProductFromCart(product_id) {
       headers: getAuthHeaders()
     });
 
-    showLoader('Product removed from cart successfully!');
+    showSuccessLoader('Product removed from cart successfully!', 2000);
     getCartItemsLength();
     await renderCart();
-    setTimeout(hideLoader, 2000);
   } catch (error) {
     console.error('Error removing from cart:', error);
 
     if (error.message.includes('401')) {
-      hideLoader();
       handleAuthError();
     } else {
-      showLoader(`Failed to remove product from cart: ${error.message}`);
-      setTimeout(hideLoader, 3000);
+      showErrorLoader(`Failed to remove product from cart: ${error.message}`);
     }
   }
 }
@@ -1097,8 +1279,7 @@ async function renderCart() {
 
   if (!cartBody) {
     console.error('Cart body element not found');
-    showLoader('Page layout error. Please refresh the page.');
-    setTimeout(hideLoader, 3000);
+    showErrorLoader('Page layout error. Please refresh the page.');
     return;
   }
 
@@ -1126,11 +1307,11 @@ async function renderCart() {
 
     updateSubTotal(total);
     console.log(`Cart rendered with ${cartData.items.length} items, total: Rs${total.toFixed(2)}`);
-    hideLoader();
+    showSuccessLoader(`Cart loaded with ${cartData.items.length} items!`, 1500);
   } catch (error) {
     console.error('Error rendering cart:', error);
     cartBody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Failed to load cart. Please try again.</td></tr>';
-    hideLoader();
+    showErrorLoader('Failed to load cart. Please try again.');
   }
 }
 
@@ -1265,9 +1446,8 @@ function createQuantityCell(item) {
       if (newQuantity > 0 && newQuantity <= (item.stock_quantity || 999)) {
         await updateProductInCart(item.product_id, newQuantity);
       } else {
-        showLoader(`Please enter a quantity between 1 and ${item.stock_quantity || 999}`);
+        showErrorLoader(`Please enter a quantity between 1 and ${item.stock_quantity || 999}`, 2000);
         input.value = item.quantity;
-        setTimeout(hideLoader, 2000);
       }
     }, 500);
   };
@@ -1330,10 +1510,10 @@ async function renderMiniCart(event) {
     });
 
     updateMiniCartSubtotal(subtotal);
-    hideLoader();
+    showSuccessLoader('Mini cart loaded!', 1000);
   } catch (error) {
     console.error('Error rendering mini cart:', error);
-    hideLoader();
+    showErrorLoader('Failed to load mini cart.');
   }
 }
 
@@ -1429,9 +1609,8 @@ async function initializeCheckout() {
   const customerToken = localStorage.getItem('token');
 
   if (!customerToken) {
-    showLoader('Please Sign Up or Login to proceed with checkout. Redirecting...');
+    showErrorLoader('Please Sign Up or Login to proceed with checkout. Redirecting...', 2000);
     setTimeout(() => {
-      hideLoader();
       window.location.replace("signup.html");
     }, 2000);
     return;
@@ -1443,11 +1622,10 @@ async function initializeCheckout() {
     await loadCustomerAddresses();
     await renderCheckoutCartWithShipping();
     setupAddressHandlers();
-    hideLoader();
+    showSuccessLoader('Checkout initialized successfully!', 1500);
   } catch (error) {
     console.error('Error initializing checkout:', error);
-    showLoader('Failed to initialize checkout. Please try again.');
-    setTimeout(hideLoader, 3000);
+    showErrorLoader('Failed to initialize checkout. Please try again.');
   }
 }
 
@@ -1573,8 +1751,7 @@ async function renderCheckoutCartWithShipping() {
 
   if (!cartBody) {
     console.error('Checkout cart body element not found');
-    showLoader('Page layout error. Please refresh the page.');
-    setTimeout(hideLoader, 3000);
+    showErrorLoader('Page layout error. Please refresh the page.');
     return;
   }
 
@@ -1902,9 +2079,8 @@ async function placeOrder(event) {
 
   const customerToken = localStorage.getItem('token');
   if (!customerToken) {
-    showLoader('Please Sign Up or Login to place order. Redirecting...');
+    showErrorLoader('Please Sign Up or Login to place order. Redirecting...', 2000);
     setTimeout(() => {
-      hideLoader();
       window.location.replace("signup.html");
     }, 2000);
     return;
@@ -1925,34 +2101,38 @@ async function placeOrder(event) {
     const cartData = await getCart();
 
     if (!cartData || !cartData.items || cartData.items.length === 0) {
-      showLoader('Your cart is empty. Please add items before placing an order.');
-      setTimeout(hideLoader, 3000);
+      showErrorLoader('Your cart is empty. Please add items before placing an order.');
       return;
     }
 
     const addressData = collectAddressData();
+    
+    // Show progress for saving addresses
+    showProgressLoader('Saving addresses...', 25);
     await saveAddresses(addressData);
 
+    // Show progress for placing order
+    showProgressLoader('Placing order...', 75);
     console.log('Placing order...');
     const orderResult = await submitOrder(cartData, addressData);
+    
+    showProgressLoader('Finalizing order...', 100);
+    
     if (orderResult.success) {
       console.log('Order placed successfully:', orderResult);
-      showLoader(`Order placed successfully! Order ID: ${orderResult.order?.order_number || 'N/A'}`);
+      showSuccessLoader(`Order placed successfully! Order ID: ${orderResult.order?.order_number || 'N/A'}`, 3000);
       setTimeout(() => {
-        hideLoader();
         window.location.href = 'index.html';
       }, 3000);
     } else {
-      showLoader('Payment Failed!')
+      showErrorLoader('Payment Failed!', 3000);
       setTimeout(() => {
-        hideLoader();
         //window.location.href = 'orders.html';
       }, 3000);
     }
   } catch (error) {
     console.error('Error placing order:', error);
-    showLoader(`Failed to place order: ${error.message}`);
-    setTimeout(hideLoader, 3000);
+    showErrorLoader(`Failed to place order: ${error.message}`);
   } finally {
     updateSubmitButton(submitButton, false, originalButtonText);
   }
@@ -1971,8 +2151,6 @@ function updateSubmitButton(button, isLoading, originalText = 'Place Order') {
 }
 
 async function saveAddresses(addressData) {
-  showLoader('Saving addresses...');
-
   try {
     await Promise.allSettled([
       saveCustomerAddress('shipping', {
@@ -1993,25 +2171,25 @@ async function saveAddresses(addressData) {
   }
 }
 
-// async function submitOrder(cartData, addressData) {
-//   const orderData = {
-//     items: cartData.items.map(item => ({
-//       product_id: item.product_id,
-//       quantity: item.quantity,
-//       price: item.price
-//     })),
-//     shipping_address: formatAddress(addressData.shipping),
-//     billing_address: formatAddress(addressData.billing),
-//     payment_method: getSelectedPaymentMethod(),
-//     subtotal: cartData.items.reduce((sum, item) => sum + parseFloat(item.total_price || 0), 0)
-//   };
+async function submitOrder(cartData, addressData) {
+  const orderData = {
+    items: cartData.items.map(item => ({
+      product_id: item.product_id,
+      quantity: item.quantity,
+      price: item.price
+    })),
+    shipping_address: formatAddress(addressData.shipping),
+    billing_address: formatAddress(addressData.billing),
+    payment_method: getSelectedPaymentMethod(),
+    subtotal: cartData.items.reduce((sum, item) => sum + parseFloat(item.total_price || 0), 0)
+  };
 
-//   return await makeApiRequest('/orders', {
-//     method: 'POST',
-//     headers: getAuthHeaders(),
-//     body: JSON.stringify(orderData)
-//   });
-// }
+  return await makeApiRequest('/orders', {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(orderData)
+  });
+}
 
 function formatAddress(address) {
   return `${address.line1} ${address.line2} ${address.country} ${address.postcode}`.trim();
@@ -2030,17 +2208,15 @@ function validateCheckoutForm() {
   for (const field of requiredFields) {
     const element = document.getElementById(field.id);
     if (!element || !element.value.trim()) {
-      showLoader(`Please fill in ${field.name}`);
+      showErrorLoader(`Please fill in ${field.name}`, 2000);
       element?.focus();
-      setTimeout(hideLoader, 2000);
       return false;
     }
   }
 
   const paymentMethod = getSelectedPaymentMethod();
   if (!paymentMethod) {
-    showLoader('Please select a payment method');
-    setTimeout(hideLoader, 2000);
+    showErrorLoader('Please select a payment method', 2000);
     return false;
   }
 

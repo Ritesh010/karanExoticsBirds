@@ -223,6 +223,10 @@
     width: 80%;
 }
 
+.wowSLider .row>* {
+    padding: 0px 0px !important;
+}
+
 @media (max-width: 768px) {
     .login-page .container {
         flex-direction: column;
