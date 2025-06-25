@@ -1247,8 +1247,16 @@ async function deleteProductFromCart(product_id) {
     });
 
     showSuccessLoader('Product removed from cart successfully!', 2000);
-    getCartItemsLength();
-    await renderCart();
+    
+    // Update cart length first
+    await getCartItemsLength();
+    
+    // Only render cart if we're on the cart page
+    const cartBody = document.getElementById("cart-body");
+    if (cartBody) {
+      await renderCart();
+    }
+    
   } catch (error) {
     console.error('Error removing from cart:', error);
 
@@ -1261,12 +1269,17 @@ async function deleteProductFromCart(product_id) {
 }
 
 async function getCartItemsLength() {
-  const cartData = await getCart();
-  if (cartData) {
-    const cartLengthElement = document.getElementById('miniCartItemsLength');
-    if (cartLengthElement) {
-      cartLengthElement.textContent = cartData.item_count;
+  try {
+    const cartData = await getCart();
+    if (cartData) {
+      const cartLengthElement = document.getElementById('miniCartItemsLength');
+      if (cartLengthElement) {
+        cartLengthElement.textContent = cartData.item_count || 0;
+      }
     }
+  } catch (error) {
+    console.error('Error getting cart items length:', error);
+    // Don't show error to user for this background operation
   }
 }
 
@@ -1482,8 +1495,11 @@ function createTotalCell(item) {
 // MINI CART FUNCTIONS
 // ============================================================================
 
-async function renderMiniCart(event) {
-  event.preventDefault();
+async function renderMiniCart(event = null) {
+  // Only prevent default if event exists
+  if (event) {
+    event.preventDefault();
+  }
 
   showLoader('Loading mini cart...');
 
@@ -1503,11 +1519,19 @@ async function renderMiniCart(event) {
     let subtotal = 0;
     miniCartContainer.innerHTML = '';
 
-    cartData.items.forEach(item => {
-      const miniCartItem = createMiniCartItem(item);
-      miniCartContainer.appendChild(miniCartItem);
-      subtotal += item.total_price;
-    });
+    if (cartData.items && cartData.items.length > 0) {
+      cartData.items.forEach(item => {
+        const miniCartItem = createMiniCartItem(item);
+        miniCartContainer.appendChild(miniCartItem);
+        subtotal += item.total_price;
+      });
+    } else {
+      // Show empty cart message
+      const emptyMessage = document.createElement('li');
+      emptyMessage.className = 'woocommerce-mini-cart-item';
+      emptyMessage.innerHTML = '<p style="text-align: center; padding: 20px;">Your cart is empty</p>';
+      miniCartContainer.appendChild(emptyMessage);
+    }
 
     updateMiniCartSubtotal(subtotal);
     showSuccessLoader('Mini cart loaded!', 1000);
@@ -1543,7 +1567,14 @@ function createMiniCartRemoveLink(item) {
     if (confirm('Remove this item from cart?')) {
       removeLink.innerHTML = '<i class="far fa-spinner fa-spin"></i>';
       await deleteProductFromCart(item.product_id);
-      renderMiniCart();
+      
+      // Check if we're on cart page before calling renderCart
+      if (document.getElementById("cart-body")) {
+        await renderCart();
+      }
+      
+      // Update mini cart and cart length
+      await getCartItemsLength();
     }
   };
 
