@@ -214,6 +214,15 @@
     width: 56%;
 }
 
+.footer-widget .about-logo {
+    margin-bottom: 17px;
+    text-align: center;
+}
+
+.footer-widget img {
+    width: 38%;
+}
+
 @media (max-width: 768px) {
     .login-page .container {
         flex-direction: column;
