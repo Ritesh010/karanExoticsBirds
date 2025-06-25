@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Checkout Page</title>
+    <title>The Bird Cart || Terms and Conditons Page</title>
     <meta name="author" content="" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -12,6 +12,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
     <link rel="preconnect" href="https://fonts.googleapis.com/" />
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <!-- font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
     <link
         href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&amp;family=Source+Sans+3:ital,wght@0,200..900;1,200..900&amp;display=swap"
         rel="stylesheet" />
@@ -22,16 +24,17 @@
 </head>
 
 <body>
-    <div class="slider-drag-cursor">
-        <i class="fas fa-angle-left me-2"></i> DRAG
-        <i class="fas fa-angle-right ms-2"></i>
-    </div>
+
+    <!-- <div id="loader">
+        <div class="spinner"></div>
+    </div> -->
+
     <!-- mobile menu -->
     <div class="ot-menu-wrapper">
         <div class="ot-menu-area text-center">
             <button class="ot-menu-toggle"><i class="fal fa-times"></i></button>
             <div class="mobile-logo">
-                <a href="index.html"><img src="assets/img/logo.webp" alt="" /></a>
+                <a href="index.html"><img src="assets/img/logo.webp" alt="logo.webp" /></a>
             </div>
             <div class="ot-mobile-menu">
                 <ul>
@@ -93,12 +96,8 @@
                     <div class="col-auto d-xl-block">
                         <div class="header-links">
                             <ul>
-                                <li>
+                                <li class="login-dropdown">
                                     <i class="fal fa-user"></i> <a href="signup.html">Login</a>
-                                </li>
-                                <li class="changepassword">
-                                    <i class="fa-solid fa-lock"></i>
-                                    <a href="javascript:(void);" id="changePasswordBtn">Change Password</a>
                                 </li>
                             </ul>
                         </div>
@@ -112,7 +111,7 @@
                     <div class="row align-items-center justify-content-between">
                         <div class="col-auto">
                             <div class="header-logo">
-                                <a href="index.html"><img src="assets/img/logo.webp" alt="" /></a>
+                                <a href="index.html"><img src="assets/img/logo.webp" alt="logo.webp" /></a>
                             </div>
                         </div>
                         <div class="col-auto">
@@ -143,94 +142,160 @@
             </div>
         </div>
     </header>
-
     <div class="breadcumb-wrapper" data-bg-src="assets/img/bg/breadcrumb-bg.png">
         <div class="container">
             <div class="breadcumb-content">
-                <h1 class="breadcumb-title" data-cue="slideInUp">Checkout</h1>
+                <h1 class="breadcumb-title" data-cue="slideInUp">Terms and Conditions</h1>
                 <ul class="breadcumb-menu">
-                    <li data-cue="slideInUp" data-delay="100">
-                        <a href="index.html">Home</a>
-                    </li>
-                    <li data-cue="slideInUp" data-delay="100">Checkout</li>
+                    <li data-cue="slideInUp" data-delay="100"><a href="index.html">Home</a></li>
+                    <li data-cue="slideInUp" data-delay="100">Terms and Conditions</li>
                 </ul>
             </div>
         </div>
     </div>
 
-    <!-- FORM START -->
-    <section class="login-page equalSpacing">
+    <section class="space-bottom overflow-hidden equalSpacing">
         <div class="container">
-            <div class="row">
-                <div class="col-md-6 col-six">
-                    <div class="left-panel" id="leftPanel">
-                        <h1 id="welcomeTitle">Welcome!</h1>
-                        <p id="welcomeText">Create your account.<br>For Free!</p>
-                        <button class="switch-btn" id="switchBtn" onclick="toggleForm()">Sign Up</button>
-                    </div>
-                </div>
-                <div class="col-md-6 col-six">
-                    <div class="right-panel">
-                        <!-- Login Form -->
-                        <div id="loginForm" class="form-container">
-                            <h2 class="form-title">Login</h2>
-                            <form onsubmit="handleLogin(event)">
-                                <div class="form-group">
-                                    <label for="loginEmail">Username/Email address <span
-                                            class="required">*</span></label>
-                                    <input type="email" id="loginEmail" value="jane.smith@example.com" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="loginPassword">Password <span class="required">*</span></label>
-                                    <input type="password" id="loginPassword" placeholder="Enter your password" value="securepassword123"
-                                        required>
-                                </div>
-                                <button type="submit" class="submit-btn">Sign In</button>
-                            </form>
-                        </div>
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <div class="policy-content">
+                        <h4>General Terms</h4>
+                        <p>By accessing and placing an order with The Bird Cart, you confirm that you are in
+                            agreement with and bound by the terms of service contained in the Terms & Conditions
+                            outlined below. These terms apply to the entire website and any email or other type of
+                            communication between you and The Bird Cart. Under no circumstances shall Karan Exotic
+                            Birds team be liable for any direct, indirect, special, incidental, or consequential
+                            damages, including, but not limited to, loss of data or profit, arising out of the use, or
+                            the inability to use, the materials on this site, even if The Bird Cart team or an
+                            authorized representative has been advised of the possibility of such damages. If your use
+                            of materials from this site results in the need for servicing, repair, or correction of
+                            equipment or data, you assume any costs thereof. The Bird Cart will not be responsible
+                            for any outcome that may occur during the course of usage of our resources. We reserve the
+                            right to change prices and revise the resources usage policy at any moment without any prior
+                            intimation / notice.</p>
 
-                        <!-- Signup Form -->
-                        <div id="signupForm" class="form-container hidden">
-                            <h2 class="form-title">Sign Up</h2>
-                            <form onsubmit="handleSignup(event)">
-                                <div class="form-group">
-                                    <label for="signupName">First Name <span class="required">*</span></label>
-                                    <input type="text" id="firstName" placeholder="Enter your First name" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="signupName">Last Name <span class="required">*</span></label>
-                                    <input type="text" id="lastName" placeholder="Enter your Last name" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="signupEmail">Email address <span class="required">*</span></label>
-                                    <input type="email" id="signupEmail" placeholder="Enter your email" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="signupEmail">Mobile Number  <span class="required">*</span></label>
-                                    <input type="number" id="phone" placeholder="Enter your mobile no" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="signupPassword">Password <span class="required">*</span></label>
-                                    <input type="password" id="signupPassword" placeholder="Create a password" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="confirmPassword">Confirm Password <span
-                                            class="required">*</span></label>
-                                    <input type="password" id="confirmPassword" placeholder="Confirm your password"
-                                        required>
-                                </div>
-                                <button type="submit" class="submit-btn">Create Account</button>
-                            </form>
-                        </div>
+                        <h4>License</h4>
+                        <p>The Bird Cart grants you a revocable, non-exclusive, non-transferable, limited license
+                            to download, install and use the website strictly in accordance with the terms of this
+                            Agreement. These Terms & Conditions are a contract between you and The Bird Cart
+                            (referred to in these Terms & Conditions as "The Bird Cart", "us", "we" or "our"), the
+                            provider of the The Bird Cart website and the services accessible from the Karan Exotic
+                            Birds website (which are collectively referred to in these Terms & Conditions as the "Karan
+                            Exotic Birds Service"). You are agreeing to be bound by these Terms & Conditions. If you do
+                            not agree to these Terms & Conditions, please do not use the The Bird Cart Service. In
+                            these Terms & Conditions, "you" refers both to you as an individual and to the entity you
+                            represent. If you violate any of these Terms & Conditions, we reserve the right to cancel
+                            your account or block access to your account without notice.</p>
+
+                        <h4>Definitions and key terms</h4>
+                        <p>To help explain things as clearly as possible in this Terms & Conditions, every time any of
+                            these terms are referenced, are strictly defined as:</p>
+
+                        <p><b>Cookie:</b> small amount of data generated by a website and saved by your web browser. It
+                            is used to identify your browser, provide analytics, remember information about you such as
+                            your language preference or login information.</p>
+
+                        <p><b>Company:</b> when these terms mention “Company,” “we,” “us,” or “our,” it refers to Karan
+                            Exotic Birds, that is responsible for your information under this Terms & Conditions.</p>
+
+                        <p><b>Country:</b> where The Bird Cart or the owners/founders of The Bird Cart are
+                            based, in this case is India.</p>
+
+                        <p><b>Device:</b> any internet-connected device such as a phone, tablet, computer, or any other
+                            device that can be used to visit The Bird Cart and use the services.</p>
+
+                        <p><b>Service:</b> refers to the service provided by The Bird Cart as described in the
+                            relative terms (if available) and on this platform.</p>
+
+                        <p><b>Third-party service:</b> refers to advertisers, contest sponsors, promotional and
+                            marketing partners, and others who provide our content or whose products or services we
+                            think may interest you.</p>
+
+                        <p><b>Website:</b> The Bird Cart’s site, which can be accessed via this: <a
+                                href="https://www.thebirdcart.com">https://www.thebirdcart.com</a></p>
+
+                        <p><b>You:</b> a person or entity that is registered with The Bird Cart to use the Services.</p>
+
+                        <h4>License</h4>
+                        <p>The Bird Cart grants you a revocable, non-exclusive, non-transferable, limited license to
+                            download, install and use the website strictly in accordance with the terms of this
+                            Agreement. These Terms & Conditions are a contract between you and The Bird Cart (referred
+                            to in these Terms & Conditions as "The Bird Cart", "us", "we" or "our"), the provider of the
+                            The Bird Cart website and the services accessible from the The Bird Cart website (which
+                            are collectively referred to in these Terms & Conditions as the "The Bird Cart
+                            Service"). You are agreeing to be bound by these Terms & Conditions. If you do not agree to
+                            these Terms & Conditions, please do not use the The Bird Cart Service. In these Terms &
+                            Conditions, "you" refers both to you as an individual and to the entity you represent. If
+                            you violate any of these Terms & Conditions, we reserve the right to cancel your account or
+                            block access to your account without notice.</p>
+
+                        <h4>Copyright</h4>
+                        <p>All content included on this site, such as text, graphics, logos, images, video and audio,
+                            are the property of The Bird Cart, its affiliates or its licensors. Unauthorized use of this
+                            material is strictly prohibited.</p>
+
+                        <h4>Links to Third Party Websites</h4>
+                        <p>This website may contain links to third-party websites that are not owned or controlled by
+                            The Bird Cart. The Bird Cart has no control over and assumes no responsibility for the
+                            content, privacy policies, or practices of any third party sites or services. You further
+                            acknowledge and agree that The Bird Cart shall not be responsible or liable, directly or
+                            indirectly, for any damage or loss caused or alleged to be caused by or in connection with
+                            use of or reliance on any such content, goods or services available on or through any such
+                            third-party websites.</p>
+
+                        <h4>Disclaimer of Warranties</h4>
+                        <p>Your use of the The Bird Cart Service is at your own risk. The Bird Cart disclaims all
+                            warranties, whether express or implied, with respect to this service, including but not
+                            limited to the implied warranties of merchantability and fitness for a particular purpose.
+                            The Bird Cart does not warrant that the content on the The Bird Cart Service is
+                            accurate, complete or up-to-date. You acknowledge that this service may contain inaccuracies
+                            or errors and we make no representation as to the accuracy or completeness of such
+                            information.</p>
+
+                        <h4>Limitation of Liability</h4>
+                        <p>In no event will The Bird Cart be liable for any indirect, incidental, special, consequential
+                            or punitive damages, including without limitation loss of profit, data, use, goodwill, or
+                            other intangible losses, arising out of or related to your access to or use of this service.
+                            Under no circumstances shall The Bird Cart's total liability to you for all damages, losses
+                            and causes of action (whether in contract, tort (including negligence), or otherwise) exceed
+                            the amount paid by you to The Bird Cart in connection with these Terms & Conditions.</p>
+
+                        <h4>Indemnification</h4>
+                        <p>You agree to indemnify, defend and hold harmless The Bird Cart, its officers, directors,
+                            employees, agents and affiliates from and against any claims, damages, obligations, losses,
+                            liabilities, costs or debt, and expenses (including but not limited to attorney's fees)
+                            arising from: your use of the The Bird Cart Service; your violation of these Terms &
+                            Conditions or applicable laws; or your violation of third party rights.</p>
+
+                        <h4>Severability</h4>
+                        <p>If any provision of these Terms & Conditions is found by a court or other tribunal to be
+                            invalid or unenforceable, the remaining provisions will continue in full force and effect.
+                        </p>
+
+                        <h4>Governing Law</h4>
+                        <p>These Terms & Conditions shall be governed by and construed in accordance with the laws of
+                            the State of [State], without regard to its conflict of law principles. Any legal action or
+                            proceeding relating to these Terms & Conditions shall be brought exclusively in the federal
+                            or state courts located in [City, State], and you hereby consent to the jurisdiction and
+                            venue of such courts.</p>
+
+                        <h4>Entire Agreement</h4>
+                        <p>These Terms & Conditions constitute the entire agreement between you and The Bird Cart with
+                            respect to the The Bird Cart Service and supersede all prior agreements and
+                            understandings, whether written or oral, relating to the subject matter hereof.</p>
+
+                        <h4>Contact Information</h4>
+                        <p>If you have any questions about these Terms & Conditions, please contact us at [Your Contact
+                            Information].</p>
+
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- FORM START -->
 
     <footer class="footer-wrapper footer-layout1" data-bg-src="assets/img/bg/footer_bg_1.png">
-        
+
         <div class="container">
             <div class="footer-top">
                 <div class="footer-contact-wrap">
@@ -286,7 +351,7 @@
                         <div class="widget footer-widget">
                             <div class="ot-widget-about">
                                 <div class="about-logo">
-                                    <a href="index.html"><img src="assets/img/footerLogo.webp" alt="logo.webp"/></a>
+                                    <a href="index.html"><img src="assets/img/footerLogo.webp" alt="logo.webp" /></a>
                                 </div>
                                 <p class="about-text">
                                     Phasellus ultricies aliquam volutpat ullamcorper laoreet
@@ -337,7 +402,7 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>                    
+                    </div>
                 </div>
             </div>
         </div>
@@ -347,7 +412,7 @@
                     <div class="col-md-auto" data-cue="slideInUp">
                         <p class="copyright-text">
                             <i class="fal fa-copyright"></i> Copyright 2025
-                            <a href="index.html">Karan Exotic Birds</a>. All Rights
+                            <a href="index.html">The Bird Cart</a>. All Rights
                             Reserved.
                         </p>
                     </div>
@@ -369,11 +434,26 @@
           "></path>
         </svg>
     </div>
+    <!-- change password -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <h2>Change Password</h2>
+            <form id="passwordForm">
+                <input type="password" id="oldPassword" placeholder="Old Password" required>
+                <input type="password" id="newPassword" placeholder="New Password" required>
+                <input type="password" id="reNewPassword" placeholder="Retype Password" required>
+                <button type="submit" onclick="changePassword(event)">Submit</button>
+
+            </form>
+        </div>
+    </div>
+    <!-- change password -->
     <script src="assets/js/vendor/jquery-3.7.1.min.js"></script>
     <script src="assets/js/app.min.js"></script>
     <script src="assets/js/particles-config.js"></script>
     <script src="assets/js/main.js"></script>
-    <script src="assets/js/signup.js"></script>
+    <script src="assets/js/connect.js"></script>
 </body>
 
 </html>

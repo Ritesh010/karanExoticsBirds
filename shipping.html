@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Checkout Page</title>
+    <title>The Bird Cart || Shipping & Payment Policy</title>
     <meta name="author" content="" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -12,6 +12,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
     <link rel="preconnect" href="https://fonts.googleapis.com/" />
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <!-- font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
     <link
         href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&amp;family=Source+Sans+3:ital,wght@0,200..900;1,200..900&amp;display=swap"
         rel="stylesheet" />
@@ -22,16 +24,17 @@
 </head>
 
 <body>
-    <div class="slider-drag-cursor">
-        <i class="fas fa-angle-left me-2"></i> DRAG
-        <i class="fas fa-angle-right ms-2"></i>
-    </div>
+
+    <!-- <div id="loader">
+        <div class="spinner"></div>
+    </div> -->
+
     <!-- mobile menu -->
     <div class="ot-menu-wrapper">
         <div class="ot-menu-area text-center">
             <button class="ot-menu-toggle"><i class="fal fa-times"></i></button>
             <div class="mobile-logo">
-                <a href="index.html"><img src="assets/img/logo.webp" alt="" /></a>
+                <a href="index.html"><img src="assets/img/logo.webp" alt="logo.webp" /></a>
             </div>
             <div class="ot-mobile-menu">
                 <ul>
@@ -93,12 +96,8 @@
                     <div class="col-auto d-xl-block">
                         <div class="header-links">
                             <ul>
-                                <li>
+                                <li class="login-dropdown">
                                     <i class="fal fa-user"></i> <a href="signup.html">Login</a>
-                                </li>
-                                <li class="changepassword">
-                                    <i class="fa-solid fa-lock"></i>
-                                    <a href="javascript:(void);" id="changePasswordBtn">Change Password</a>
                                 </li>
                             </ul>
                         </div>
@@ -112,7 +111,7 @@
                     <div class="row align-items-center justify-content-between">
                         <div class="col-auto">
                             <div class="header-logo">
-                                <a href="index.html"><img src="assets/img/logo.webp" alt="" /></a>
+                                <a href="index.html"><img src="assets/img/logo.webp" alt="logo.webp" /></a>
                             </div>
                         </div>
                         <div class="col-auto">
@@ -143,94 +142,52 @@
             </div>
         </div>
     </header>
-
     <div class="breadcumb-wrapper" data-bg-src="assets/img/bg/breadcrumb-bg.png">
         <div class="container">
             <div class="breadcumb-content">
-                <h1 class="breadcumb-title" data-cue="slideInUp">Checkout</h1>
+                <h1 class="breadcumb-title" data-cue="slideInUp">Shipping & Payment Policy</h1>
                 <ul class="breadcumb-menu">
-                    <li data-cue="slideInUp" data-delay="100">
-                        <a href="index.html">Home</a>
-                    </li>
-                    <li data-cue="slideInUp" data-delay="100">Checkout</li>
+                    <li data-cue="slideInUp" data-delay="100"><a href="index.html">Home</a></li>
+                    <li data-cue="slideInUp" data-delay="100">Shipping & Payment Policy</li>
                 </ul>
             </div>
         </div>
     </div>
 
-    <!-- FORM START -->
-    <section class="login-page equalSpacing">
+    <section class="space-bottom overflow-hidden equalSpacing">
         <div class="container">
-            <div class="row">
-                <div class="col-md-6 col-six">
-                    <div class="left-panel" id="leftPanel">
-                        <h1 id="welcomeTitle">Welcome!</h1>
-                        <p id="welcomeText">Create your account.<br>For Free!</p>
-                        <button class="switch-btn" id="switchBtn" onclick="toggleForm()">Sign Up</button>
-                    </div>
-                </div>
-                <div class="col-md-6 col-six">
-                    <div class="right-panel">
-                        <!-- Login Form -->
-                        <div id="loginForm" class="form-container">
-                            <h2 class="form-title">Login</h2>
-                            <form onsubmit="handleLogin(event)">
-                                <div class="form-group">
-                                    <label for="loginEmail">Username/Email address <span
-                                            class="required">*</span></label>
-                                    <input type="email" id="loginEmail" value="jane.smith@example.com" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="loginPassword">Password <span class="required">*</span></label>
-                                    <input type="password" id="loginPassword" placeholder="Enter your password" value="securepassword123"
-                                        required>
-                                </div>
-                                <button type="submit" class="submit-btn">Sign In</button>
-                            </form>
-                        </div>
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <div class="policy-content">
+                        <p>We endeavour to dispatch all products ordered within 48 hours after the order has been placed
+                            and accepted by us. You will be given an indication of the expected delivery time when you
+                            place your order online. Karan Exotic Birds insures each order through transit up until it
+                            is delivered to you or is collected. You need to sign a confirmation of receipt of the
+                            products when the products are collected and by doing so, you accept the responsibility for
+                            the products ordered from that moment on. If the recipient or collector is not the original
+                            purchaser, or in case of delivery of a gift, then you accept this signature as evidence of
+                            delivery and fulfillment of your order.</p>
+                        <p><strong>DELIVERY CHARGES (based on selection)</strong> All domestic orders are delivered for
+                            free of charge</p>
+                        <p><strong>ADDITIONAL CHARGES</strong> There are no additional charges. The total payable amount
+                            is indicated on the individual items.</p>
+                        <p><strong>DELIVERY TIME</strong> This may vary depending on the delivery location and services
+                            of our logistics partner. However, we endeavour to deliver orders within 4 to 7 Business
+                            days (excludes public holidays)</p>
+                        <p><strong>DELIVERY AREAS</strong> We deliver PAN India, For further information please call us
+                            on 9318431190 10 AM to 5 PM, Monday to Saturday on business days (excludes public holidays)
+                            or write to us at karanexoticbirds@gmail.com</p>
+                        <p><strong>PAYMENT MODE</strong> You can pay by Cash on Delivery (COD), Online through Internet
+                            banking, Visa, MasterCard, American Express, Maestro, Debit cards, IMPS</p>
 
-                        <!-- Signup Form -->
-                        <div id="signupForm" class="form-container hidden">
-                            <h2 class="form-title">Sign Up</h2>
-                            <form onsubmit="handleSignup(event)">
-                                <div class="form-group">
-                                    <label for="signupName">First Name <span class="required">*</span></label>
-                                    <input type="text" id="firstName" placeholder="Enter your First name" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="signupName">Last Name <span class="required">*</span></label>
-                                    <input type="text" id="lastName" placeholder="Enter your Last name" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="signupEmail">Email address <span class="required">*</span></label>
-                                    <input type="email" id="signupEmail" placeholder="Enter your email" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="signupEmail">Mobile Number  <span class="required">*</span></label>
-                                    <input type="number" id="phone" placeholder="Enter your mobile no" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="signupPassword">Password <span class="required">*</span></label>
-                                    <input type="password" id="signupPassword" placeholder="Create a password" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="confirmPassword">Confirm Password <span
-                                            class="required">*</span></label>
-                                    <input type="password" id="confirmPassword" placeholder="Confirm your password"
-                                        required>
-                                </div>
-                                <button type="submit" class="submit-btn">Create Account</button>
-                            </form>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- FORM START -->
 
     <footer class="footer-wrapper footer-layout1" data-bg-src="assets/img/bg/footer_bg_1.png">
-        
+
         <div class="container">
             <div class="footer-top">
                 <div class="footer-contact-wrap">
@@ -286,7 +243,7 @@
                         <div class="widget footer-widget">
                             <div class="ot-widget-about">
                                 <div class="about-logo">
-                                    <a href="index.html"><img src="assets/img/footerLogo.webp" alt="logo.webp"/></a>
+                                    <a href="index.html"><img src="assets/img/footerLogo.webp" alt="logo.webp" /></a>
                                 </div>
                                 <p class="about-text">
                                     Phasellus ultricies aliquam volutpat ullamcorper laoreet
@@ -337,7 +294,7 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>                    
+                    </div>
                 </div>
             </div>
         </div>
@@ -347,7 +304,7 @@
                     <div class="col-md-auto" data-cue="slideInUp">
                         <p class="copyright-text">
                             <i class="fal fa-copyright"></i> Copyright 2025
-                            <a href="index.html">Karan Exotic Birds</a>. All Rights
+                            <a href="index.html">The Bird Cart</a>. All Rights
                             Reserved.
                         </p>
                     </div>
@@ -369,11 +326,26 @@
           "></path>
         </svg>
     </div>
+    <!-- change password -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <h2>Change Password</h2>
+            <form id="passwordForm">
+                <input type="password" id="oldPassword" placeholder="Old Password" required>
+                <input type="password" id="newPassword" placeholder="New Password" required>
+                <input type="password" id="reNewPassword" placeholder="Retype Password" required>
+                <button type="submit" onclick="changePassword(event)">Submit</button>
+
+            </form>
+        </div>
+    </div>
+    <!-- change password -->
     <script src="assets/js/vendor/jquery-3.7.1.min.js"></script>
     <script src="assets/js/app.min.js"></script>
     <script src="assets/js/particles-config.js"></script>
     <script src="assets/js/main.js"></script>
-    <script src="assets/js/signup.js"></script>
+    <script src="assets/js/connect.js"></script>
 </body>
 
 </html>
