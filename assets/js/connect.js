@@ -241,7 +241,7 @@ function showSuccessLoader(message, autoHide = 2000) {
 }
 
 function showErrorLoader(message, autoHide = 3000) {
-  showLoader(message, { type: 'error', autoHide });
+ // showLoader(message, { type: 'error', autoHide });
 }
 
 function showProgressLoader(message, progress = 0) {
@@ -591,7 +591,7 @@ async function renderProducts() {
       container.appendChild(productCard);
     });
 
-    showSuccessLoader(`Loaded ${products.length} products successfully!`, 1500);
+    //showSuccessLoader(`Loaded ${products.length} products successfully!`, 1500);
   } catch (error) {
     console.error('Error rendering products:', error);
     container.innerHTML = '<div class="error">Failed to load products. Please try again later.</div>';
@@ -617,7 +617,7 @@ async function renderTopAndTrending() {
           const productCard = createProductCard(product, 'index');
           recentContainer.appendChild(productCard);
           loadedCount++;
-          showProgressLoader(`Loading products... (${loadedCount}/${totalItems})`, (loadedCount / totalItems) * 100);
+          //showProgressLoader(`Loading products... (${loadedCount}/${totalItems})`, (loadedCount / totalItems) * 100);
         }
       }
     }
@@ -629,12 +629,12 @@ async function renderTopAndTrending() {
           const productCard = createProductElement(product);
           topContainer.appendChild(productCard);
           loadedCount++;
-          showProgressLoader(`Loading products... (${loadedCount}/${totalItems})`, (loadedCount / totalItems) * 100);
+          //showProgressLoader(`Loading products... (${loadedCount}/${totalItems})`, (loadedCount / totalItems) * 100);
         }
       }
     }
 
-    showSuccessLoader('Products loaded successfully!', 1500);
+    //showSuccessLoader('Products loaded successfully!', 1500);
   } catch (error) {
     console.error('Error rendering top and trending:', error);
     showErrorLoader('Failed to load top and trending products.');
@@ -863,7 +863,7 @@ async function createCategories() {
       element.appendChild(menu.cloneNode(true));
     });
 
-    showSuccessLoader('Categories loaded successfully!', 1000);
+    //showSuccessLoader('Categories loaded successfully!', 1000);
   } catch (error) {
     console.error('Error creating categories:', error);
     showErrorLoader('Failed to load categories.');
@@ -1246,7 +1246,7 @@ async function deleteProductFromCart(product_id) {
       headers: getAuthHeaders()
     });
 
-    showSuccessLoader('Product removed from cart successfully!', 2000);
+    //showSuccessLoader('Product removed from cart successfully!', 2000);
     
     // Update cart length first
     await getCartItemsLength();
@@ -1320,7 +1320,7 @@ async function renderCart() {
 
     updateSubTotal(total);
     console.log(`Cart rendered with ${cartData.items.length} items, total: Rs${total.toFixed(2)}`);
-    showSuccessLoader(`Cart loaded with ${cartData.items.length} items!`, 1500);
+    //showSuccessLoader(`Cart loaded with ${cartData.items.length} items!`, 1500);
   } catch (error) {
     console.error('Error rendering cart:', error);
     cartBody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Failed to load cart. Please try again.</td></tr>';
@@ -1619,7 +1619,7 @@ async function renderMiniCart(event = null) {
     }
 
     updateMiniCartSubtotal(subtotal);
-    showSuccessLoader('Mini cart loaded!', 1000);
+    //showSuccessLoader('Mini cart loaded!', 1000);
   } catch (error) {
     console.error('Error rendering mini cart:', error);
     showErrorLoader('Failed to load mini cart.');
@@ -1738,7 +1738,7 @@ async function initializeCheckout() {
     await loadCustomerAddresses();
     await renderCheckoutCartWithShipping();
     setupAddressHandlers();
-    showSuccessLoader('Checkout initialized successfully!', 1500);
+    //showSuccessLoader('Checkout initialized successfully!', 1500);
   } catch (error) {
     console.error('Error initializing checkout:', error);
     showErrorLoader('Failed to initialize checkout. Please try again.');
