@@ -77,8 +77,8 @@ function showLoader(message, options = {}) {
       z-index: 9999;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       text-align: center;
-      min-width: 280px;
       max-width: 400px;
+      height: 130px;
       animation: loaderFadeIn 0.3s ease-out;
     `;
 
