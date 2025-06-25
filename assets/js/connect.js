@@ -849,27 +849,25 @@ function createProductActionDiv(productData) {
 // ============================================================================
 // CATEGORY AND MENU FUNCTIONS
 // ============================================================================
-addEventListener("DOMContentLoaded", (event) => { 
-  async function createCategories() {
-    // showLoader('Loading categories...');
-  
-    try {
-      const topAttributes = await getTopAttributes();
-  
-      const menu = createDynamicMenu(topAttributes);
-      const catMenus = document.getElementsByClassName('catMenu');
-  
-      Array.from(catMenus).forEach(element => {
-        element.appendChild(menu.cloneNode(true));
-      });
-  
-      //showSuccessLoader('Categories loaded successfully!', 1000);
-    } catch (error) {
-      console.error('Error creating categories:', error);
-      showErrorLoader('Failed to load categories.');
-    }
+async function createCategories() {
+  // showLoader('Loading categories...');
+
+  try {
+    const topAttributes = await getTopAttributes();
+
+    const menu = createDynamicMenu(topAttributes);
+    const catMenus = document.getElementsByClassName('catMenu');
+
+    Array.from(catMenus).forEach(element => {
+      element.appendChild(menu.cloneNode(true));
+    });
+
+    //showSuccessLoader('Categories loaded successfully!', 1000);
+  } catch (error) {
+    console.error('Error creating categories:', error);
+    showErrorLoader('Failed to load categories.');
   }
-})
+}
 
 function createDynamicMenu(data) {
   const outerUl = document.createElement('ul');
