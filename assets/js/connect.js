@@ -955,11 +955,11 @@ function createDynamicMenu(data, isMobile = false) {
   });
 
   // Add the empty ul at the end for mobile
-  if (isMobile) {
-    const emptyUl = document.createElement('ul');
-    emptyUl.className = 'sub-menu';
-    outerUl.parentNode?.appendChild(emptyUl);
-  }
+  // if (isMobile) {
+  //   const emptyUl = document.createElement('ul');
+  //   emptyUl.className = 'sub-menu';
+  //   outerUl.parentNode?.appendChild(emptyUl);
+  // }
 
   return outerUl;
 }
