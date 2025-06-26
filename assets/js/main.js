@@ -443,10 +443,12 @@ window.onclick = (event) => {
 //       }, 500);
 //     });
 
-const mainCatergory = document.querySelector('#catmenuMob a');
-const subSubCategory = document.querySelector('.ot-mobile-menu #catmenuMob > ul.sub-menu:nth-of-type(2)');
-const subCategory = document.querySelector('.ot-mobile-menu #catmenuMob > ul.sub-menu:first-of-type');
+addEventListener("DOMContentLoaded", (event) => {
+    const mainCatergory = document.querySelector('#catmenuMob a');
+    const subSubCategory = document.querySelector('.ot-mobile-menu #catmenuMob > ul.sub-menu:nth-of-type(2)');
+    const subCategory = document.querySelector('.ot-mobile-menu #catmenuMob > ul.sub-menu:first-of-type');
 
-mainCatergory.addEventListener("click", ()=>{
-    subCategory.style.display = 'block'
+    mainCatergory.addEventListener("click", () => {
+        subCategory.style.display = 'block'
+    })
 })
