@@ -914,7 +914,6 @@ async function createCategories() {
 
     const menu = createDynamicMenu(topAttributes);
 
-    // Append cloned menu to elements with id 'catmenu' and 'catmenuMob'
     const catMenu = document.getElementById('catmenu');
     const catMenuMob = document.getElementById('catmenuMob');
 
@@ -925,7 +924,7 @@ async function createCategories() {
 
     if (catMenuMob) {
       catMenuMob.appendChild(menu.cloneNode(true));
-      addDropdownFunctionality(catMenuMob, true); // mobile flag true
+      addDropdownFunctionality(catMenuMob);
     }
 
     //showSuccessLoader('Categories loaded successfully!', 1000);
@@ -950,10 +949,14 @@ function createDynamicMenu(data) {
 
     const innerUl = document.createElement('ul');
     innerUl.className = 'sub-menu';
-    innerUl.style.display = 'none'; // hide submenus initially
+    innerUl.style.display = 'none'; // Hide submenu initially
 
     group.top_values.forEach(item => {
       const subLi = document.createElement('li');
+
+      // If you have nested submenus inside top_values, you can extend here.
+      // For now, assume one level of submenu.
+
       const subA = document.createElement('a');
       subA.href = `shop.html?key=${encodeURIComponent(group.key_name)}&value=${encodeURIComponent(item.value)}`;
       subA.textContent = item.value;
@@ -969,8 +972,7 @@ function createDynamicMenu(data) {
   return outerUl;
 }
 
-
-function addDropdownFunctionality(menuContainer, isMobile = false) {
+function addDropdownFunctionality(menuContainer) {
   const parents = menuContainer.querySelectorAll('.menu-item-has-children > a');
 
   parents.forEach(parentLink => {
@@ -982,16 +984,23 @@ function addDropdownFunctionality(menuContainer, isMobile = false) {
 
       const isVisible = submenu.style.display === 'block';
 
-      // Close all submenus first (optional, for accordion behavior)
-      menuContainer.querySelectorAll('.sub-menu').forEach(ul => {
-        ul.style.display = 'none';
+      const parentLi = parentLink.parentElement;
+      if (!parentLi) return;
+
+      // Close sibling submenus (same level only)
+      const siblingLis = Array.from(parentLi.parentElement.children).filter(li => li !== parentLi);
+
+      siblingLis.forEach(siblingLi => {
+        const siblingSubmenu = siblingLi.querySelector(':scope > ul.sub-menu');
+        if (siblingSubmenu) siblingSubmenu.style.display = 'none';
       });
 
-      // Toggle current submenu
+      // Toggle clicked submenu
       submenu.style.display = isVisible ? 'none' : 'block';
     });
   });
 }
+
 
 
 
