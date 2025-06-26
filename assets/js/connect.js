@@ -940,43 +940,52 @@ function createDynamicMenu(data) {
 
   data.forEach(group => {
     const parentLi = document.createElement('li');
-    parentLi.className = 'menu-item-has-children';
 
-    const parentA = document.createElement('a');
-    parentA.href = '#';
-    parentA.textContent = group.key_name;
-    parentLi.appendChild(parentA);
+    const hasChildren = Array.isArray(group.top_values) && group.top_values.length > 0;
 
-    const innerUl = document.createElement('ul');
-    innerUl.className = 'sub-menu';
-    innerUl.style.display = 'none'; // Hide submenu initially
+    if (hasChildren) {
+      parentLi.className = 'menu-item-has-children';
 
-    group.top_values.forEach(item => {
-      const subLi = document.createElement('li');
+      const parentA = document.createElement('a');
+      parentA.href = '#';
+      parentA.textContent = group.key_name;
+      parentLi.appendChild(parentA);
 
-      // If you have nested submenus inside top_values, you can extend here.
-      // For now, assume one level of submenu.
+      // Create submenu for values
+      const innerUl = document.createElement('ul');
+      innerUl.className = 'sub-menu';
+      innerUl.style.display = 'none'; // hide initially
 
-      const subA = document.createElement('a');
-      subA.href = `shop.html?key=${encodeURIComponent(group.key_name)}&value=${encodeURIComponent(item.value)}`;
-      subA.textContent = item.value;
+      group.top_values.forEach(item => {
+        const subLi = document.createElement('li');
+        const subA = document.createElement('a');
+        subA.href = `shop.html?key=${encodeURIComponent(group.key_name)}&value=${encodeURIComponent(item.value)}`;
+        subA.textContent = item.value;
+        subLi.appendChild(subA);
+        innerUl.appendChild(subLi);
+      });
 
-      subLi.appendChild(subA);
-      innerUl.appendChild(subLi);
-    });
+      parentLi.appendChild(innerUl);
+    } else {
+      // No children — just a single link
+      const leafA = document.createElement('a');
+      leafA.href = `shop.html?key=${encodeURIComponent(group.key_name)}&value=${encodeURIComponent(group.value || '')}`;
+      leafA.textContent = group.value || group.key_name;
+      parentLi.appendChild(leafA);
+    }
 
-    parentLi.appendChild(innerUl);
     outerUl.appendChild(parentLi);
   });
 
   return outerUl;
 }
 
+
 function addDropdownFunctionality(menuContainer) {
   const parents = menuContainer.querySelectorAll('.menu-item-has-children > a');
 
   parents.forEach(parentLink => {
-    parentLink.addEventListener('click', (e) => {
+    parentLink.addEventListener('click', e => {
       e.preventDefault();
 
       const submenu = parentLink.nextElementSibling;
@@ -984,22 +993,21 @@ function addDropdownFunctionality(menuContainer) {
 
       const isVisible = submenu.style.display === 'block';
 
+      // Close siblings at same level
       const parentLi = parentLink.parentElement;
       if (!parentLi) return;
 
-      // Close sibling submenus (same level only)
-      const siblingLis = Array.from(parentLi.parentElement.children).filter(li => li !== parentLi);
-
-      siblingLis.forEach(siblingLi => {
-        const siblingSubmenu = siblingLi.querySelector(':scope > ul.sub-menu');
-        if (siblingSubmenu) siblingSubmenu.style.display = 'none';
+      const siblings = Array.from(parentLi.parentElement.children).filter(li => li !== parentLi);
+      siblings.forEach(sib => {
+        const sibSubmenu = sib.querySelector(':scope > ul.sub-menu');
+        if (sibSubmenu) sibSubmenu.style.display = 'none';
       });
 
-      // Toggle clicked submenu
       submenu.style.display = isVisible ? 'none' : 'block';
     });
   });
 }
+
 
 
 
