@@ -442,3 +442,11 @@ window.onclick = (event) => {
 //         content.style.display = "block";
 //       }, 500);
 //     });
+
+const mainCatergory = document.querySelector('#catmenuMob a');
+const subSubCategory = document.querySelector('.ot-mobile-menu #catmenuMob > ul.sub-menu:nth-of-type(2)');
+const subCategory = document.querySelector('.ot-mobile-menu #catmenuMob > ul.sub-menu:first-of-type');
+
+mainCatergory.addEventListener("click", ()=>{
+    subCategory.style.display = 'block'
+})
