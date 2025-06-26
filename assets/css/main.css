@@ -656,6 +656,6 @@
     display: block;
 } */
 
-.ot-mobile-menu #catmenuMob .sub-menu:nth-child(1){
-    
+.ot-mobile-menu #catmenuMob>ul.sub-menu:first-of-type, .ot-mobile-menu #catmenuMob>ul.sub-menu:nth-of-type(2) {
+    display: none;
 }
