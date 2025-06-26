@@ -72,11 +72,11 @@ async function handleLogin(event) {
     console.log(response)
     // Simple validation
     if (response.message === 'Login successful') {
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('firstName', response.customer.first_name);
-        localStorage.setItem('lastName', response.customer.last_name);
-        localStorage.setItem('email', response.customer.email);
-        localStorage.setItem('phone', response.customer.phone);
+        sessionStorage.setItem('token', response.token);
+        sessionStorage.setItem('firstName', response.customer.first_name);
+        sessionStorage.setItem('lastName', response.customer.last_name);
+        sessionStorage.setItem('email', response.customer.email);
+        sessionStorage.setItem('phone', response.customer.phone);
         window.location.replace('index.html');
     } else {
         alert('Wrong Details');

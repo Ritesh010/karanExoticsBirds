@@ -314,20 +314,20 @@ if (pageHandlers[document.title]) {
 }
 
 // Handle user authentication
-if (localStorage.getItem('token')) {
+if (sessionStorage.getItem('token')) {
   getCartItemsLength();
   updateLoginDisplay();
 }
 
 function logout(event) {
   event.preventDefault()
-  localStorage.clear();
+  sessionStorage.clear();
   window.location.reload('index.html')
 }
 
 function updateLoginDisplay() {
-  const firstName = localStorage.getItem('firstName');
-  const lastName = localStorage.getItem('lastName');
+  const firstName = sessionStorage.getItem('firstName');
+  const lastName = sessionStorage.getItem('lastName');
   // Select the element with class 'login-dropdown'
   const loginDropdown = document.querySelector('.login-dropdown');
 
@@ -445,7 +445,7 @@ async function makeApiRequest(endpoint, options = {}) {
 }
 
 function getAuthHeaders() {
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   return token
     ? { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
     : { 'Content-Type': 'application/json' };
@@ -453,7 +453,7 @@ function getAuthHeaders() {
 
 function handleAuthError() {
   showErrorLoader('Your session has expired. Please login again.', 2000);
-  localStorage.removeItem('token');
+  sessionStorage.removeItem('token');
   setTimeout(() => {
     window.location.replace("signup.html");
   }, 2000);
@@ -851,6 +851,61 @@ function createProductActionDiv(productData) {
 // ============================================================================
 // CATEGORY AND MENU FUNCTIONS
 // ============================================================================
+// async function createCategories() {
+//   // showLoader('Loading categories...');
+
+//   try {
+//     const topAttributes = await getTopAttributes();
+
+//     const menu = createDynamicMenu(topAttributes);
+//     const catMenus = document.getElementsByClassName('catMenu');
+
+//     Array.from(catMenus).forEach(element => {
+//       element.appendChild(menu.cloneNode(true));
+//     });
+
+//     //showSuccessLoader('Categories loaded successfully!', 1000);
+//   } catch (error) {
+//     console.error('Error creating categories:', error);
+//     showErrorLoader('Failed to load categories.');
+//   }
+// }
+
+// function createDynamicMenu(data) {
+//   const outerUl = document.createElement('ul');
+//   outerUl.className = 'sub-menu';
+
+//   data.forEach(group => {
+//     const parentLi = document.createElement('li');
+//     parentLi.className = 'menu-item-has-children';
+
+//     const parentA = document.createElement('a');
+//     parentA.href = '#';
+//     parentA.textContent = group.key_name;
+//     parentLi.appendChild(parentA);
+
+//     const innerUl = document.createElement('ul');
+//     innerUl.className = 'sub-menu';
+
+//     group.top_values.forEach(item => {
+//       const subLi = document.createElement('li');
+//       const subA = document.createElement('a');
+//       subA.href = `shop.html?key=${group.key_name}&value=${item.value}`;
+//       subA.textContent = item.value;
+
+//       subLi.appendChild(subA);
+//       innerUl.appendChild(subLi);
+//     });
+
+//     parentLi.appendChild(innerUl);
+//     outerUl.appendChild(parentLi);
+//   });
+
+//   return outerUl;
+// }
+
+
+
 async function createCategories() {
   // showLoader('Loading categories...');
 
@@ -858,11 +913,20 @@ async function createCategories() {
     const topAttributes = await getTopAttributes();
 
     const menu = createDynamicMenu(topAttributes);
-    const catMenus = document.getElementsByClassName('catMenu');
 
-    Array.from(catMenus).forEach(element => {
-      element.appendChild(menu.cloneNode(true));
-    });
+    // Append cloned menu to elements with id 'catmenu' and 'catmenuMob'
+    const catMenu = document.getElementById('catmenu');
+    const catMenuMob = document.getElementById('catmenuMob');
+
+    if (catMenu) {
+      catMenu.appendChild(menu.cloneNode(true));
+      addDropdownFunctionality(catMenu);
+    }
+
+    if (catMenuMob) {
+      catMenuMob.appendChild(menu.cloneNode(true));
+      addDropdownFunctionality(catMenuMob, true); // mobile flag true
+    }
 
     //showSuccessLoader('Categories loaded successfully!', 1000);
   } catch (error) {
@@ -886,11 +950,12 @@ function createDynamicMenu(data) {
 
     const innerUl = document.createElement('ul');
     innerUl.className = 'sub-menu';
+    innerUl.style.display = 'none'; // hide submenus initially
 
     group.top_values.forEach(item => {
       const subLi = document.createElement('li');
       const subA = document.createElement('a');
-      subA.href = `shop.html?key=${group.key_name}&value=${item.value}`;
+      subA.href = `shop.html?key=${encodeURIComponent(group.key_name)}&value=${encodeURIComponent(item.value)}`;
       subA.textContent = item.value;
 
       subLi.appendChild(subA);
@@ -903,6 +968,32 @@ function createDynamicMenu(data) {
 
   return outerUl;
 }
+
+
+function addDropdownFunctionality(menuContainer, isMobile = false) {
+  const parents = menuContainer.querySelectorAll('.menu-item-has-children > a');
+
+  parents.forEach(parentLink => {
+    parentLink.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      const submenu = parentLink.nextElementSibling;
+      if (!submenu) return;
+
+      const isVisible = submenu.style.display === 'block';
+
+      // Close all submenus first (optional, for accordion behavior)
+      menuContainer.querySelectorAll('.sub-menu').forEach(ul => {
+        ul.style.display = 'none';
+      });
+
+      // Toggle current submenu
+      submenu.style.display = isVisible ? 'none' : 'block';
+    });
+  });
+}
+
+
 
 // ============================================================================
 // PRODUCT DETAILS FUNCTIONS
@@ -1115,7 +1206,7 @@ async function changePassword(event) {
 }
 
 async function addToCart(product_id, quantity) {
-  const customerToken = localStorage.getItem('token');
+  const customerToken = sessionStorage.getItem('token');
 
   if (!customerToken) {
     showErrorLoader('Please Sign Up or Login to add items to cart. Redirecting...', 2000);
@@ -1155,7 +1246,7 @@ async function addToCart(product_id, quantity) {
 }
 
 async function getCart() {
-  const customerToken = localStorage.getItem('token');
+  const customerToken = sessionStorage.getItem('token');
 
   if (!customerToken) {
     showErrorLoader('Please Sign Up or Login to view cart. Redirecting...', 2000);
@@ -1183,7 +1274,7 @@ async function getCart() {
 }
 
 async function updateProductInCart(product_id, quantity) {
-  const customerToken = localStorage.getItem('token');
+  const customerToken = sessionStorage.getItem('token');
 
   if (!customerToken) {
     showErrorLoader('Please Sign Up or Login. Redirecting...', 2000);
@@ -1223,7 +1314,7 @@ async function updateProductInCart(product_id, quantity) {
 }
 
 async function deleteProductFromCart(product_id) {
-  const customerToken = localStorage.getItem('token');
+  const customerToken = sessionStorage.getItem('token');
 
   if (!customerToken) {
     showErrorLoader('Please Sign Up or Login. Redirecting...', 2000);
@@ -1723,7 +1814,7 @@ function updateMiniCartSubtotal(subtotal) {
 // ============================================================================
 
 async function initializeCheckout() {
-  const customerToken = localStorage.getItem('token');
+  const customerToken = sessionStorage.getItem('token');
 
   if (!customerToken) {
     showErrorLoader('Please Sign Up or Login to proceed with checkout. Redirecting...', 2000);
@@ -1747,7 +1838,7 @@ async function initializeCheckout() {
 }
 
 async function loadCustomerAddresses() {
-  const customerToken = localStorage.getItem('token');
+  const customerToken = sessionStorage.getItem('token');
 
   try {
     const data = await makeApiRequest('/customers/addresses', {
@@ -2194,7 +2285,7 @@ function updateShippingDisplay(shipping, shippingResult) {
 async function placeOrder(event) {
   event.preventDefault();
 
-  const customerToken = localStorage.getItem('token');
+  const customerToken = sessionStorage.getItem('token');
   if (!customerToken) {
     showErrorLoader('Please Sign Up or Login to place order. Redirecting...', 2000);
     setTimeout(() => {
