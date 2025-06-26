@@ -295,15 +295,14 @@ function addLoaderStyles() {
 
 // Initialize page based on document title
 
-addEventListener("DOMContentLoaded", (event) => {
-  createCategories();
-})
+createCategories();
+
 
 const pageHandlers = {
-  'Shop Page': renderProducts,
-  'Cart Page': renderCart,
-  'Checkout Page': initializeCheckout,
-  'Home Page': renderTopAndTrending
+  'The Bird Cart || Shop Page': renderProducts,
+  'The Bird Cart || Cart Page': renderCart,
+  'The Bird Cart || Checkout Page': initializeCheckout,
+  'The Bird Cart || Home Page': renderTopAndTrending
 };
 
 if (pageHandlers[document.title]) {
