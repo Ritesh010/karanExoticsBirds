@@ -1079,9 +1079,9 @@ function addMobileDropdownStyles() {
 }
 
 // Call this function after DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    addMobileDropdownStyles();
-});
+// document.addEventListener('DOMContentLoaded', function() {
+//    // addMobileDropdownStyles();
+// });
 
 
 
