@@ -6,7 +6,7 @@ async function getCashfreePaymentLink(customerId, customerPhone, orderAmount) {
   };
 
   try {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const response = await fetch("https://api.thebirdcart.com/api/cashfree/generate-payment-id", {
       method: "POST",
       headers: {
@@ -41,7 +41,7 @@ async function getCashfreePaymentStatus(order_id) {
   };
 
   try {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     const response = await fetch("https://api.thebirdcart.com/api/cashfree/check-payment", {
       method: "POST",
       headers: {
@@ -73,8 +73,8 @@ async function getCashfreePaymentStatus(order_id) {
 
 async function submitOrder(cartData, addressData) {
   try {
-    const name = localStorage.getItem('firstName') || 'Guest';
-    const phone = localStorage.getItem('phone') || '';
+    const name = sessionStorage.getItem('firstName') || 'Guest';
+    const phone = sessionStorage.getItem('phone') || '';
     const cartTotal = document.getElementById('checkout-total')?.textContent;
 
     if (!cartTotal || !phone || !cartData?.items?.length) {
