@@ -859,7 +859,7 @@ async function createCategories() {
 
     const menu = createDynamicMenu(topAttributes);
     const catMenus = document.getElementById('catmenu');
-    const mobMenu = createDynamicMenu(topAttributes, true);
+    const mobMenu = createDynamicMenu(topAttributes);
     const mobcatMenu = document.getElementById('catmenuMob');
     catMenus.appendChild(menu);
     mobcatMenu.appendChild(mobMenu)
@@ -870,75 +870,21 @@ async function createCategories() {
   }
 }
 
-// function createDynamicMenu(data) {
-//   const outerUl = document.createElement('ul');
-//   outerUl.className = 'sub-menu';
-
-//   data.forEach(group => {
-//     const parentLi = document.createElement('li');
-//     parentLi.className = 'menu-item-has-children';
-
-//     const parentA = document.createElement('a');
-//     parentA.href = '#';
-//     parentA.textContent = group.key_name;
-//     parentLi.appendChild(parentA);
-
-//     const innerUl = document.createElement('ul');
-//     innerUl.className = 'sub-menu';
-
-//     group.top_values.forEach(item => {
-//       const subLi = document.createElement('li');
-//       const subA = document.createElement('a');
-//       subA.href = `shop.html?key=${group.key_name}&value=${item.value}`;
-//       subA.textContent = item.value;
-
-//       subLi.appendChild(subA);
-//       innerUl.appendChild(subLi);
-//     });
-
-//     parentLi.appendChild(innerUl);
-//     outerUl.appendChild(parentLi);
-//   });
-
-//   return outerUl;
-// }
-
-
-// ============================================================================
-// PRODUCT DETAILS FUNCTIONS
-// ============================================================================
-
-function createDynamicMenu(data, isMobile = false) {
+function createDynamicMenu(data) {
   const outerUl = document.createElement('ul');
-  outerUl.className = isMobile ? 'sub-menu ot-submenu ot-open' : 'sub-menu';
-  if (isMobile) {
-    outerUl.style.display = 'block';
-  }
+  outerUl.className = 'sub-menu';
 
   data.forEach(group => {
     const parentLi = document.createElement('li');
-    parentLi.className = isMobile ? 'menu-item-has-children ot-item-has-children ot-active' : 'menu-item-has-children';
+    parentLi.className = 'menu-item-has-children';
 
     const parentA = document.createElement('a');
     parentA.href = '#';
     parentA.textContent = group.key_name;
-    
-    if (isMobile) {
-      const expandSpan1 = document.createElement('span');
-      expandSpan1.className = 'ot-mean-expand';
-      const expandSpan2 = document.createElement('span');
-      expandSpan2.className = 'ot-mean-expand';
-      parentA.appendChild(expandSpan1);
-      parentA.appendChild(expandSpan2);
-    }
-    
     parentLi.appendChild(parentA);
 
     const innerUl = document.createElement('ul');
-    innerUl.className = isMobile ? 'sub-menu ot-submenu ot-open' : 'sub-menu';
-    if (isMobile) {
-      innerUl.style.display = '';
-    }
+    innerUl.className = 'sub-menu';
 
     group.top_values.forEach(item => {
       const subLi = document.createElement('li');
@@ -954,15 +900,14 @@ function createDynamicMenu(data, isMobile = false) {
     outerUl.appendChild(parentLi);
   });
 
-  // Add the empty ul at the end for mobile
-  // if (isMobile) {
-  //   const emptyUl = document.createElement('ul');
-  //   emptyUl.className = 'sub-menu';
-  //   outerUl.parentNode?.appendChild(emptyUl);
-  // }
-
   return outerUl;
 }
+
+
+// ============================================================================
+// PRODUCT DETAILS FUNCTIONS
+// ============================================================================
+
 function populateProductData(product) {
   const fieldMappings = {
     'product-id': product.product_id,
