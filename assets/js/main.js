@@ -443,24 +443,24 @@ window.onclick = (event) => {
 //       }, 500);
 //     });
 
-document.addEventListener("DOMContentLoaded", (event) => {
-    const mainCategory = document.querySelector('#catmenuMob > a');
-    const subCategory = document.querySelector('.ot-mobile-menu #catmenuMob > ul.sub-menu:first-of-type');
-    const subSubCategory = document.querySelector('.ot-mobile-menu #catmenuMob > ul.sub-menu:nth-of-type(2)');
+// document.addEventListener("DOMContentLoaded", (event) => {
+//     const mainCategory = document.querySelector('#catmenuMob > a');
+//     const subCategory = document.querySelector('.ot-mobile-menu #catmenuMob > ul.sub-menu:first-of-type');
+//     const subSubCategory = document.querySelector('.ot-mobile-menu #catmenuMob > ul.sub-menu:nth-of-type(2)');
 
-    if (!mainCategory || !subCategory || !subSubCategory) {
-        console.error("One or more elements not found.");
-        return;
-    }
+//     if (!mainCategory || !subCategory || !subSubCategory) {
+//         console.error("One or more elements not found.");
+//         return;
+//     }
 
-    mainCategory.addEventListener("click", () => {
-        subCategory.style.display = 'block';
+//     mainCategory.addEventListener("click", () => {
+//         subCategory.style.display = 'block';
 
-        // Optional: hide subSubCategory initially
-        subSubCategory.style.display = 'block';
-    });
+//         // Optional: hide subSubCategory initially
+//         subSubCategory.style.display = 'block';
+//     });
 
-    subCategory.addEventListener("click", () => {
-        subSubCategory.style.display = 'block';
-    });
-});
+//     subCategory.addEventListener("click", () => {
+//         subSubCategory.style.display = 'block';
+//     });
+// });
