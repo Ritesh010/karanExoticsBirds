@@ -851,238 +851,58 @@ function createProductActionDiv(productData) {
 // ============================================================================
 // CATEGORY AND MENU FUNCTIONS
 // ============================================================================
-// async function createCategories() {
-//   // showLoader('Loading categories...');
-
-//   try {
-//     const topAttributes = await getTopAttributes();
-
-//     const menu = createDynamicMenu(topAttributes);
-//     const catMenus = document.getElementsByClassName('catMenu');
-
-//     Array.from(catMenus).forEach(element => {
-//       element.appendChild(menu.cloneNode(true));
-//     });
-
-//     //showSuccessLoader('Categories loaded successfully!', 1000);
-//   } catch (error) {
-//     console.error('Error creating categories:', error);
-//     showErrorLoader('Failed to load categories.');
-//   }
-// }
-
-// function createDynamicMenu(data) {
-//   const outerUl = document.createElement('ul');
-//   outerUl.className = 'sub-menu';
-
-//   data.forEach(group => {
-//     const parentLi = document.createElement('li');
-//     parentLi.className = 'menu-item-has-children';
-
-//     const parentA = document.createElement('a');
-//     parentA.href = '#';
-//     parentA.textContent = group.key_name;
-//     parentLi.appendChild(parentA);
-
-//     const innerUl = document.createElement('ul');
-//     innerUl.className = 'sub-menu';
-
-//     group.top_values.forEach(item => {
-//       const subLi = document.createElement('li');
-//       const subA = document.createElement('a');
-//       subA.href = `shop.html?key=${group.key_name}&value=${item.value}`;
-//       subA.textContent = item.value;
-
-//       subLi.appendChild(subA);
-//       innerUl.appendChild(subLi);
-//     });
-
-//     parentLi.appendChild(innerUl);
-//     outerUl.appendChild(parentLi);
-//   });
-
-//   return outerUl;
-// }
-
 async function createCategories() {
-    // showLoader('Loading categories...');
-    try {
-        const topAttributes = await getTopAttributes();
-        
-        // Create desktop menu
-        const desktopMenu = createDynamicMenu(topAttributes, false);
-        const catMenu = document.getElementById('catMenu');
-        if (catMenu) {
-            catMenu.innerHTML = '';
-            catMenu.appendChild(desktopMenu);
-        }
-        
-        // Create mobile menu with dropdown functionality
-        const mobileMenu = createDynamicMenu(topAttributes, true);
-        const catMenuMob = document.getElementById('catMenuMob');
-        if (catMenuMob) {
-            catMenuMob.innerHTML = '';
-            catMenuMob.appendChild(mobileMenu);
-        }
-        
-        // Initialize mobile dropdown functionality
-        initializeMobileDropdowns();
-        
-        //showSuccessLoader('Categories loaded successfully!', 1000);
-    } catch (error) {
-        console.error('Error creating categories:', error);
-        showErrorLoader('Failed to load categories.');
-    }
-}
+  // showLoader('Loading categories...');
 
-function createDynamicMenu(data, isMobile = false) {
-    const outerUl = document.createElement('ul');
-    outerUl.className = 'sub-menu';
-    
-    data.forEach(group => {
-        const parentLi = document.createElement('li');
-        parentLi.className = 'menu-item-has-children';
-        
-        const parentA = document.createElement('a');
-        parentA.href = '#';
-        parentA.textContent = group.key_name;
-        
-        if (isMobile) {
-            // Add dropdown arrow for mobile
-            const dropdownIcon = document.createElement('span');
-            dropdownIcon.className = 'dropdown-toggle';
-            dropdownIcon.innerHTML = ' ▼';
-            dropdownIcon.style.fontSize = '12px';
-            dropdownIcon.style.marginLeft = '5px';
-            parentA.appendChild(dropdownIcon);
-            
-            // Add click handler for mobile dropdown
-            parentA.addEventListener('click', function(e) {
-                e.preventDefault();
-                toggleMobileSubmenu(this);
-            });
-        }
-        
-        parentLi.appendChild(parentA);
-        
-        const innerUl = document.createElement('ul');
-        innerUl.className = 'sub-menu';
-        
-        if (isMobile) {
-            // Hide submenu by default on mobile
-            innerUl.style.display = 'none';
-            innerUl.classList.add('mobile-submenu');
-        }
-        
-        group.top_values.forEach(item => {
-            const subLi = document.createElement('li');
-            const subA = document.createElement('a');
-            subA.href = `shop.html?key=${group.key_name}&value=${item.value}`;
-            subA.textContent = item.value;
-            subLi.appendChild(subA);
-            innerUl.appendChild(subLi);
-        });
-        
-        parentLi.appendChild(innerUl);
-        outerUl.appendChild(parentLi);
+  try {
+    const topAttributes = await getTopAttributes();
+
+    const menu = createDynamicMenu(topAttributes);
+    const catMenus = document.getElementsByClassName('catMenu');
+
+    Array.from(catMenus).forEach(element => {
+      element.appendChild(menu.cloneNode(true));
     });
-    
-    return outerUl;
+
+    //showSuccessLoader('Categories loaded successfully!', 1000);
+  } catch (error) {
+    console.error('Error creating categories:', error);
+    showErrorLoader('Failed to load categories.');
+  }
 }
 
-function initializeMobileDropdowns() {
-    const catMenuMob = document.getElementById('catMenuMob');
-    if (!catMenuMob) return;
-    
-    // Hide all mobile submenus on initialization
-    const mobileSubmenus = catMenuMob.querySelectorAll('.mobile-submenu');
-    mobileSubmenus.forEach(submenu => {
-        submenu.style.display = 'none';
+function createDynamicMenu(data) {
+  const outerUl = document.createElement('ul');
+  outerUl.className = 'sub-menu';
+
+  data.forEach(group => {
+    const parentLi = document.createElement('li');
+    parentLi.className = 'menu-item-has-children';
+
+    const parentA = document.createElement('a');
+    parentA.href = '#';
+    parentA.textContent = group.key_name;
+    parentLi.appendChild(parentA);
+
+    const innerUl = document.createElement('ul');
+    innerUl.className = 'sub-menu';
+
+    group.top_values.forEach(item => {
+      const subLi = document.createElement('li');
+      const subA = document.createElement('a');
+      subA.href = `shop.html?key=${group.key_name}&value=${item.value}`;
+      subA.textContent = item.value;
+
+      subLi.appendChild(subA);
+      innerUl.appendChild(subLi);
     });
+
+    parentLi.appendChild(innerUl);
+    outerUl.appendChild(parentLi);
+  });
+
+  return outerUl;
 }
-
-function toggleMobileSubmenu(parentLink) {
-    const parentLi = parentLink.parentElement;
-    const submenu = parentLi.querySelector('.mobile-submenu');
-    const dropdownIcon = parentLink.querySelector('.dropdown-toggle');
-    
-    if (!submenu) return;
-    
-    const isVisible = submenu.style.display !== 'none';
-    
-    // Close all other open submenus in mobile menu
-    const catMenuMob = document.getElementById('catMenuMob');
-    const allSubmenus = catMenuMob.querySelectorAll('.mobile-submenu');
-    const allIcons = catMenuMob.querySelectorAll('.dropdown-toggle');
-    
-    allSubmenus.forEach(menu => {
-        menu.style.display = 'none';
-    });
-    
-    allIcons.forEach(icon => {
-        icon.innerHTML = ' ▼';
-    });
-    
-    // Toggle current submenu
-    if (!isVisible) {
-        submenu.style.display = 'block';
-        if (dropdownIcon) {
-            dropdownIcon.innerHTML = ' ▲';
-        }
-    }
-}
-
-// Optional: Add CSS for better mobile dropdown styling
-function addMobileDropdownStyles() {
-    const style = document.createElement('style');
-    style.textContent = `
-        #catMenuMob .menu-item-has-children > a {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 15px;
-            border-bottom: 1px solid #eee;
-            text-decoration: none;
-            color: #333;
-        }
-        
-        #catMenuMob .mobile-submenu {
-            background-color: #f8f8f8;
-            padding-left: 20px;
-            transition: all 0.3s ease;
-        }
-        
-        #catMenuMob .mobile-submenu li a {
-            padding: 8px 15px;
-            display: block;
-            text-decoration: none;
-            color: #666;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        #catMenuMob .mobile-submenu li a:hover {
-            background-color: #e8e8e8;
-            color: #333;
-        }
-        
-        .dropdown-toggle {
-            cursor: pointer;
-            user-select: none;
-        }
-    `;
-    
-    // Only add styles if they don't already exist
-    if (!document.querySelector('#mobile-dropdown-styles')) {
-        style.id = 'mobile-dropdown-styles';
-        document.head.appendChild(style);
-    }
-}
-
-// Call this function after DOM is loaded
-// document.addEventListener('DOMContentLoaded', function() {
-//    // addMobileDropdownStyles();
-// });
-
 
 
 // ============================================================================
