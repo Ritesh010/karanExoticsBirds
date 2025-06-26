@@ -6776,10 +6776,10 @@ a.text-theme:hover,
     margin-left: auto
 }
 
-.header-layout1 {
+/* .header-layout1 {
     position: relative;
     z-index: 25
-}
+} */
 
 .header-layout1 .header-top a:hover {
     color: var(--title-color)

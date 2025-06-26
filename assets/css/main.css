@@ -202,7 +202,7 @@
     margin-left: -132px;
 }
 
-.sticky-wrapper .row .col-auto:nth-child(1){
+.sticky-wrapper .row .col-auto:nth-child(1) {
     width: 15%;
 }
 
@@ -227,6 +227,7 @@
     padding: 0px 0px !important;
 }
 
+
 @media (max-width: 768px) {
     .login-page .container {
         flex-direction: column;
@@ -249,6 +250,13 @@
         width: 90% !important;
     }
 
+    .sticky-wrapper .row .col-auto:nth-child(1) {
+        width: 50%;
+    }
+
+    .ot-header .menu-area {
+        padding: 10px 0px;
+    }
 
 }
 
