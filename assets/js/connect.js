@@ -917,12 +917,12 @@ function createDynamicMenu(data, isMobile = false) {
 
   data.forEach(group => {
     const parentLi = document.createElement('li');
-    parentLi.className = isMobile ? 'menu-item-has-children ot-item-has-children' : 'menu-item-has-children';
+    parentLi.className = isMobile ? 'menu-item-has-children ot-item-has-children ot-active' : 'menu-item-has-children';
 
     const parentA = document.createElement('a');
     parentA.href = '#';
     parentA.textContent = group.key_name;
-
+    
     if (isMobile) {
       const expandSpan1 = document.createElement('span');
       expandSpan1.className = 'ot-mean-expand';
@@ -931,13 +931,13 @@ function createDynamicMenu(data, isMobile = false) {
       parentA.appendChild(expandSpan1);
       parentA.appendChild(expandSpan2);
     }
-
+    
     parentLi.appendChild(parentA);
 
     const innerUl = document.createElement('ul');
-    innerUl.className = isMobile ? 'sub-menu ot-submenu' : 'sub-menu';
+    innerUl.className = isMobile ? 'sub-menu ot-submenu ot-open' : 'sub-menu';
     if (isMobile) {
-      innerUl.style.display = 'none';
+      innerUl.style.display = '';
     }
 
     group.top_values.forEach(item => {
@@ -953,6 +953,13 @@ function createDynamicMenu(data, isMobile = false) {
     parentLi.appendChild(innerUl);
     outerUl.appendChild(parentLi);
   });
+
+  // Add the empty ul at the end for mobile
+  if (isMobile) {
+    const emptyUl = document.createElement('ul');
+    emptyUl.className = 'sub-menu';
+    outerUl.parentNode?.appendChild(emptyUl);
+  }
 
   return outerUl;
 }
