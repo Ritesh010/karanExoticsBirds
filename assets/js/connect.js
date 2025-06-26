@@ -197,7 +197,7 @@ function showLoader(message, options = {}) {
   // Show loader with animation
   overlay.style.display = "block";
   loader.style.display = "block";
-  
+
   // Prevent body scroll
   document.body.style.overflow = 'hidden';
 
@@ -212,7 +212,7 @@ function showLoader(message, options = {}) {
 function hideLoader() {
   const loader = document.getElementById("loader");
   const overlay = document.getElementById("loader-overlay");
-  
+
   if (loader) {
     loader.style.animation = 'loaderFadeOut 0.3s ease-in';
     setTimeout(() => {
@@ -220,11 +220,11 @@ function hideLoader() {
       loader.style.animation = '';
     }, 300);
   }
-  
+
   if (overlay) {
     overlay.style.display = "none";
   }
-  
+
   // Restore body scroll
   document.body.style.overflow = '';
 }
@@ -241,7 +241,7 @@ function showSuccessLoader(message, autoHide = 2000) {
 }
 
 function showErrorLoader(message, autoHide = 3000) {
- // showLoader(message, { type: 'error', autoHide });
+  // showLoader(message, { type: 'error', autoHide });
 }
 
 function showProgressLoader(message, progress = 0) {
@@ -486,7 +486,7 @@ async function getProduct(product_id) {
       }, 2000);
       return;
     }
-        console.log('Loading product:', productId);
+    console.log('Loading product:', productId);
     const data = await makeApiRequest(`/products/${productId}`);
 
     console.log('Product data loaded successfully:', data);
@@ -858,12 +858,11 @@ async function createCategories() {
     const topAttributes = await getTopAttributes();
 
     const menu = createDynamicMenu(topAttributes);
-    const catMenus = document.getElementsByClassName('catMenu');
-
-    Array.from(catMenus).forEach(element => {
-      element.appendChild(menu.cloneNode(true));
-    });
-
+    const catMenus = document.getElementById('catmenu');
+    const mobMenu = createDynamicMenu(topAttributes, true);
+    const mobcatMenu = document.getElementById('catmenuMob');
+    catMenus.appendChild(menu);
+    mobcatMenu.appendChild(mobMenu)
     //showSuccessLoader('Categories loaded successfully!', 1000);
   } catch (error) {
     console.error('Error creating categories:', error);
@@ -871,21 +870,75 @@ async function createCategories() {
   }
 }
 
-function createDynamicMenu(data) {
+// function createDynamicMenu(data) {
+//   const outerUl = document.createElement('ul');
+//   outerUl.className = 'sub-menu';
+
+//   data.forEach(group => {
+//     const parentLi = document.createElement('li');
+//     parentLi.className = 'menu-item-has-children';
+
+//     const parentA = document.createElement('a');
+//     parentA.href = '#';
+//     parentA.textContent = group.key_name;
+//     parentLi.appendChild(parentA);
+
+//     const innerUl = document.createElement('ul');
+//     innerUl.className = 'sub-menu';
+
+//     group.top_values.forEach(item => {
+//       const subLi = document.createElement('li');
+//       const subA = document.createElement('a');
+//       subA.href = `shop.html?key=${group.key_name}&value=${item.value}`;
+//       subA.textContent = item.value;
+
+//       subLi.appendChild(subA);
+//       innerUl.appendChild(subLi);
+//     });
+
+//     parentLi.appendChild(innerUl);
+//     outerUl.appendChild(parentLi);
+//   });
+
+//   return outerUl;
+// }
+
+
+// ============================================================================
+// PRODUCT DETAILS FUNCTIONS
+// ============================================================================
+
+function createDynamicMenu(data, isMobile = false) {
   const outerUl = document.createElement('ul');
-  outerUl.className = 'sub-menu';
+  outerUl.className = isMobile ? 'sub-menu ot-submenu ot-open' : 'sub-menu';
+  if (isMobile) {
+    outerUl.style.display = 'block';
+  }
 
   data.forEach(group => {
     const parentLi = document.createElement('li');
-    parentLi.className = 'menu-item-has-children';
+    parentLi.className = isMobile ? 'menu-item-has-children ot-item-has-children' : 'menu-item-has-children';
 
     const parentA = document.createElement('a');
     parentA.href = '#';
     parentA.textContent = group.key_name;
+
+    if (isMobile) {
+      const expandSpan1 = document.createElement('span');
+      expandSpan1.className = 'ot-mean-expand';
+      const expandSpan2 = document.createElement('span');
+      expandSpan2.className = 'ot-mean-expand';
+      parentA.appendChild(expandSpan1);
+      parentA.appendChild(expandSpan2);
+    }
+
     parentLi.appendChild(parentA);
 
     const innerUl = document.createElement('ul');
-    innerUl.className = 'sub-menu';
+    innerUl.className = isMobile ? 'sub-menu ot-submenu' : 'sub-menu';
+    if (isMobile) {
+      innerUl.style.display = 'none';
+    }
 
     group.top_values.forEach(item => {
       const subLi = document.createElement('li');
@@ -903,12 +956,6 @@ function createDynamicMenu(data) {
 
   return outerUl;
 }
-
-
-// ============================================================================
-// PRODUCT DETAILS FUNCTIONS
-// ============================================================================
-
 function populateProductData(product) {
   const fieldMappings = {
     'product-id': product.product_id,
@@ -1249,16 +1296,16 @@ async function deleteProductFromCart(product_id) {
     });
 
     //showSuccessLoader('Product removed from cart successfully!', 2000);
-    
+
     // Update cart length first
     await getCartItemsLength();
-    
+
     // Only render cart if we're on the cart page
     const cartBody = document.getElementById("cart-body");
     if (cartBody) {
       await renderCart();
     }
-    
+
   } catch (error) {
     console.error('Error removing from cart:', error);
 
@@ -1454,20 +1501,20 @@ function createQuantityCell(item) {
   plusBtn.type = "button";
 
   // Minus button click handler
-  minusBtn.addEventListener('click', async function(event) {
+  minusBtn.addEventListener('click', async function (event) {
     event.preventDefault();
     const currentValue = parseInt(input.value);
     if (currentValue > 1) {
       const newValue = currentValue - 1;
       input.value = newValue;
-      
+
       // Disable button and show loading
       minusBtn.disabled = true;
       plusBtn.disabled = true;
       input.disabled = true;
-      
+
       minusBtn.innerHTML = '<i class="far fa-spinner fa-spin"></i>';
-      
+
       try {
         await updateProductInCart(item.product_id, newValue);
       } finally {
@@ -1481,22 +1528,22 @@ function createQuantityCell(item) {
   });
 
   // Plus button click handler
-  plusBtn.addEventListener('click', async function(event) {
+  plusBtn.addEventListener('click', async function (event) {
     event.preventDefault();
     const currentValue = parseInt(input.value);
     const maxValue = item.stock_quantity || 999;
-    
+
     if (currentValue < maxValue) {
       const newValue = currentValue + 1;
       input.value = newValue;
-      
+
       // Disable button and show loading
       minusBtn.disabled = true;
       plusBtn.disabled = true;
       input.disabled = true;
-      
+
       plusBtn.innerHTML = '<i class="far fa-spinner fa-spin"></i>';
-      
+
       try {
         await updateProductInCart(item.product_id, newValue);
       } finally {
@@ -1513,7 +1560,7 @@ function createQuantityCell(item) {
 
   // Input change handler (for direct typing)
   let updateTimeout;
-  input.addEventListener('change', async function(event) {
+  input.addEventListener('change', async function (event) {
     event.preventDefault();
 
     if (updateTimeout) {
@@ -1523,13 +1570,13 @@ function createQuantityCell(item) {
     updateTimeout = setTimeout(async () => {
       const newQuantity = parseInt(input.value);
       const maxValue = item.stock_quantity || 999;
-      
+
       if (newQuantity > 0 && newQuantity <= maxValue) {
         // Disable controls during update
         minusBtn.disabled = true;
         plusBtn.disabled = true;
         input.disabled = true;
-        
+
         try {
           await updateProductInCart(item.product_id, newQuantity);
         } finally {
@@ -1546,10 +1593,10 @@ function createQuantityCell(item) {
   });
 
   // Prevent manual input of invalid values
-  input.addEventListener('input', function(event) {
+  input.addEventListener('input', function (event) {
     const value = parseInt(event.target.value);
     const maxValue = item.stock_quantity || 999;
-    
+
     if (value < 1) {
       event.target.value = 1;
     } else if (value > maxValue) {
@@ -1654,12 +1701,12 @@ function createMiniCartRemoveLink(item) {
     if (confirm('Remove this item from cart?')) {
       removeLink.innerHTML = '<i class="far fa-spinner fa-spin"></i>';
       await deleteProductFromCart(item.product_id);
-      
+
       // Check if we're on cart page before calling renderCart
       if (document.getElementById("cart-body")) {
         await renderCart();
       }
-      
+
       // Update mini cart and cart length
       await getCartItemsLength();
     }
@@ -2224,7 +2271,7 @@ async function placeOrder(event) {
     }
 
     const addressData = collectAddressData();
-    
+
     // Show progress for saving addresses
     showProgressLoader('Saving addresses...', 25);
     await saveAddresses(addressData);
@@ -2233,9 +2280,9 @@ async function placeOrder(event) {
     showProgressLoader('Placing order...', 75);
     console.log('Placing order...');
     const orderResult = await submitOrder(cartData, addressData);
-    
+
     showProgressLoader('Finalizing order...', 100);
-    
+
     if (orderResult.success) {
       console.log('Order placed successfully:', orderResult);
       showSuccessLoader(`Order placed successfully! Order ID: ${orderResult.order?.order_number || 'N/A'}`, 3000);
