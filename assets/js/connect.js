@@ -2244,9 +2244,9 @@ async function placeOrder(event) {
     } else {
       // Handle different failure types
       if (orderResult.cancelled) {
-        showErrorLoader('Payment was cancelled. You can try again.', 2000);
+        showErrorLoader('Payment was cancelled. You can try again.', 5000);
       } else {
-        showErrorLoader(`Payment Failed: ${orderResult.message}`, 3000);
+        showErrorLoader(`Payment Failed: ${orderResult.message}`, 5000);
       }
 
       // Don't redirect on cancellation, let user try again
