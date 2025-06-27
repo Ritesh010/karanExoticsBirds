@@ -859,7 +859,7 @@ async function createCategories() {
 
     const menu = createDynamicMenu(topAttributes);
     const catMenus = document.getElementById('catmenu');
-    const mobMenu = createDynamicMenu(topAttributes);
+    const mobMenu = createDynamicMenu2(topAttributes);
     const mobcatMenu = document.getElementById('catmenuMob');
     catMenus.appendChild(menu);
     mobcatMenu.appendChild(mobMenu)
@@ -902,7 +902,38 @@ function createDynamicMenu(data) {
 
   return outerUl;
 }
+function createDynamicMenu2(data) {
+  const outerUl = document.createElement('ul');
+  outerUl.className = 'sub-menu subMenuOne';
 
+  data.forEach(group => {
+    const parentLi = document.createElement('li');
+    parentLi.className = 'menu-item-has-children';
+
+    const parentA = document.createElement('a');
+    parentA.href = '#';
+    parentA.textContent = group.key_name;
+    parentLi.appendChild(parentA);
+
+    const innerUl = document.createElement('ul');
+    innerUl.className = 'sub-menu subMenuTwo';
+
+    group.top_values.forEach(item => {
+      const subLi = document.createElement('li');
+      const subA = document.createElement('a');
+      subA.href = `shop.html?key=${group.key_name}&value=${item.value}`;
+      subA.textContent = item.value;
+
+      subLi.appendChild(subA);
+      innerUl.appendChild(subLi);
+    });
+
+    parentLi.appendChild(innerUl);
+    outerUl.appendChild(parentLi);
+  });
+
+  return outerUl;
+}
 
 // ============================================================================
 // PRODUCT DETAILS FUNCTIONS
