@@ -864,6 +864,10 @@
     .error-main-section .shape {
         display: none;
     }
+
+    .trendingItemDiv {
+        display: none;
+    }
 }
 
 @media (max-width: 480px) {
