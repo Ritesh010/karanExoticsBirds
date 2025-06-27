@@ -868,6 +868,11 @@
     .trendingItemDiv {
         display: none;
     }
+    
+    #trendingItemRow{
+        position: inherit !important;
+        height: inherit !important;
+    }
 }
 
 @media (max-width: 480px) {
