@@ -656,6 +656,14 @@
     display: block;
 } */
 
+.subMenuOne {
+    display: none;
+}
+
+.subMenuTwo {
+    display: none;
+}
+
 /* 404 page */
 .error-main-section {
     background-color: #00bbae;

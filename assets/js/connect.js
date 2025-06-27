@@ -2394,3 +2394,7 @@ function getSelectedPaymentMethod() {
 
   return 'CashFree';
 }
+
+
+let subMenuOne = document.querySelectorAll(".subMenuOne");
+let subMenuTwo = document.querySelectorAll(".subMenuTwo");
