@@ -2232,7 +2232,7 @@ async function placeOrder(event) {
     showProgressLoader('Placing order...', 75);
     console.log('Placing order...');
     const orderResult = await submitOrder(cartData, addressData);
-
+    console.log(orderResult)
     showProgressLoader('Finalizing order...', 100);
 
     if (orderResult.success) {

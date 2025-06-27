@@ -173,35 +173,3 @@ async function submitOrder(cartData, addressData) {
     };
   }
 }
-
-
-// Optional helper: API order submission
-async function postOrder(cartData, addressData) {
-  const response = await makeApiRequest('/orders', {
-    method: 'POST',
-    headers: getAuthHeaders(),
-    body: JSON.stringify({
-      items: cartData.items,
-      billing_address: formatAddress(addressData.billing),
-      shipping_address: formatAddress(addressData.shipping),
-      payment_method: getSelectedPaymentMethod(),
-      notes: document.getElementById('order-notes')?.value || ''
-    })
-  });
-
-  return response;
-}
-
-
-// return 'av';
-// return await makeApiRequest('/orders', {
-//   method: 'POST',
-//   headers: getAuthHeaders(),
-//   body: JSON.stringify({
-//     items: cartData.items,
-//     billing_address: formatAddress(addressData.billing),
-//     shipping_address: formatAddress(addressData.shipping),
-//     payment_method: getSelectedPaymentMethod(),
-//     notes: document.getElementById('order-notes')?.value || ''
-//   })
-// });
