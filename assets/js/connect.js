@@ -866,7 +866,7 @@ async function createCategories() {
     //showSuccessLoader('Categories loaded successfully!', 1000);
   } catch (error) {
     console.error('Error creating categories:', error);
-    showErrorLoader('Failed to load categories.');
+    // showErrorLoader('Failed to load categories.');
   }
 }
 
@@ -2394,20 +2394,3 @@ function getSelectedPaymentMethod() {
 
   return 'CashFree';
 }
-
-
-$(document).ready(function () {
-  $(".MobileMenuMain").each(function (index) {
-    $(this).on("click", function (e) {
-      e.stopPropagation();
-      $(".subMenuOne").eq(index).slideToggle();
-    });
-  });
-
-  $(".subMenuOne").each(function (index) {
-    $(this).on("click", function (e) {
-      e.stopPropagation();
-      $(".subMenuTwo").eq(index).slideToggle();
-    });
-  });
-});

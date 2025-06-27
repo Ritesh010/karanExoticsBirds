@@ -576,6 +576,23 @@
     <script type="text/javascript" src="engine1/script.js"></script>
     <!-- connect js -->
     <script src="assets/js/connect.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".MobileMenuMain").each(function (index) {
+                $(this).on("click", function (e) {
+                    e.stopPropagation();
+                    $(".subMenuOne").eq(index).slideToggle();
+                });
+            });
+
+            $(".subMenuOne").each(function (index) {
+                $(this).on("click", function (e) {
+                    e.stopPropagation();
+                    $(".subMenuTwo").eq(index).slideToggle();
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

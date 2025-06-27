@@ -167,16 +167,19 @@
                             the products ordered from that moment on. If the recipient or collector is not the original
                             purchaser, or in case of delivery of a gift, then you accept this signature as evidence of
                             delivery and fulfillment of your order.</p>
-                        <p><strong>DELIVERY CHARGES (based on selection)</strong> All domestic order charges are based on the dimensions and weight of the product.</p>
+                        <p><strong>DELIVERY CHARGES (based on selection)</strong> All domestic order charges are based
+                            on the dimensions and weight of the product.</p>
                         <p><strong>ADDITIONAL CHARGES</strong> There are no additional charges. The total payable amount
                             is indicated on the individual items.</p>
                         <p><strong>DELIVERY TIME</strong> This may vary depending on the delivery location and services
                             of our logistics partner. However, we endeavour to deliver orders within 4 to 7 Business
                             days (excludes public holidays)</p>
                         <p><strong>DELIVERY AREAS</strong> We deliver PAN India, For further information please call us
-                            on +91-9318431190 10 AM to 5 PM, Monday to Saturday on business days (excludes public holidays)
+                            on +91-9318431190 10 AM to 5 PM, Monday to Saturday on business days (excludes public
+                            holidays)
                             or write to us at thebirdscart@gmail.com</p>
-                        <p><strong>PAYMENT MODE</strong> You can pay online via Internet banking, Visa, MasterCard, American Express, Maestro, debit cards, UPI or IMPS</p>
+                        <p><strong>PAYMENT MODE</strong> You can pay online via Internet banking, Visa, MasterCard,
+                            American Express, Maestro, debit cards, UPI or IMPS</p>
 
                     </div>
                 </div>
@@ -344,6 +347,23 @@
     <script src="assets/js/particles-config.js"></script>
     <script src="assets/js/main.js"></script>
     <script src="assets/js/connect.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".MobileMenuMain").each(function (index) {
+                $(this).on("click", function (e) {
+                    e.stopPropagation();
+                    $(".subMenuOne").eq(index).slideToggle();
+                });
+            });
+
+            $(".subMenuOne").each(function (index) {
+                $(this).on("click", function (e) {
+                    e.stopPropagation();
+                    $(".subMenuTwo").eq(index).slideToggle();
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

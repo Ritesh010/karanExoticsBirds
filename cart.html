@@ -233,7 +233,7 @@
             </div>
         </div>
     </div>
-    <footer class="footer-wrapper footer-layout1" data-bg-src="assets/img/bg/footer_bg_1.png">        
+    <footer class="footer-wrapper footer-layout1" data-bg-src="assets/img/bg/footer_bg_1.png">
         <div class="container">
             <div class="footer-top">
                 <div class="footer-contact-wrap">
@@ -289,7 +289,7 @@
                         <div class="widget footer-widget">
                             <div class="ot-widget-about">
                                 <div class="about-logo">
-                                    <a href="index.html"><img src="assets/img/footerLogo.webp" alt="logo.webp"/></a>
+                                    <a href="index.html"><img src="assets/img/footerLogo.webp" alt="logo.webp" /></a>
                                 </div>
                                 <p class="about-text">
                                     Phasellus ultricies aliquam volutpat ullamcorper laoreet
@@ -340,7 +340,7 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>                    
+                    </div>
                 </div>
             </div>
         </div>
@@ -392,6 +392,23 @@
     <script src="assets/js/particles-config.js"></script>
     <script src="assets/js/main.js"></script>
     <script src="assets/js/connect.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".MobileMenuMain").each(function (index) {
+                $(this).on("click", function (e) {
+                    e.stopPropagation();
+                    $(".subMenuOne").eq(index).slideToggle();
+                });
+            });
+
+            $(".subMenuOne").each(function (index) {
+                $(this).on("click", function (e) {
+                    e.stopPropagation();
+                    $(".subMenuTwo").eq(index).slideToggle();
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
