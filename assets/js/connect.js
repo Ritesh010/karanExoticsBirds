@@ -2242,10 +2242,19 @@ async function placeOrder(event) {
         window.location.href = 'index.html';
       }, 3000);
     } else {
-      showErrorLoader('Payment Failed!', 3000);
-      setTimeout(() => {
-        //window.location.href = 'orders.html';
-      }, 3000);
+      // Handle different failure types
+      if (orderResult.cancelled) {
+        showErrorLoader('Payment was cancelled. You can try again.', 2000);
+      } else {
+        showErrorLoader(`Payment Failed: ${orderResult.message}`, 3000);
+      }
+
+      // Don't redirect on cancellation, let user try again
+      if (!orderResult.cancelled) {
+        setTimeout(() => {
+          // window.location.href = 'orders.html';
+        }, 3000);
+      }
     }
   } catch (error) {
     console.error('Error placing order:', error);
@@ -2288,25 +2297,6 @@ async function saveAddresses(addressData) {
   }
 }
 
-async function submitOrder(cartData, addressData) {
-  const orderData = {
-    items: cartData.items.map(item => ({
-      product_id: item.product_id,
-      quantity: item.quantity,
-      price: item.price
-    })),
-    shipping_address: formatAddress(addressData.shipping),
-    billing_address: formatAddress(addressData.billing),
-    payment_method: getSelectedPaymentMethod(),
-    subtotal: cartData.items.reduce((sum, item) => sum + parseFloat(item.total_price || 0), 0)
-  };
-
-  return await makeApiRequest('/orders', {
-    method: 'POST',
-    headers: getAuthHeaders(),
-    body: JSON.stringify(orderData)
-  });
-}
 
 function formatAddress(address) {
   return `${address.line1} ${address.line2} ${address.country} ${address.postcode}`.trim();

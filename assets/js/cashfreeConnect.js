@@ -95,67 +95,84 @@ async function submitOrder(cartData, addressData) {
 
     console.log("Starting payment with:", checkoutOptions);
 
-    // Step 2: Launch checkout
-    const result = await cashfree.checkout(checkoutOptions);
+    // Step 2: Launch checkout with timeout
+    const result = await Promise.race([
+      cashfree.checkout(checkoutOptions),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Payment timeout')), 300000) // 5 minutes timeout
+      )
+    ]);
 
-    // Process Steps 3–6 only if result exists
-    if (result) {
-      const status = await getCashfreePaymentStatus(orderId);
-      console.log("Payment status:", status);
-
-      // Handle errors or unsuccessful payment
-      if (result.error || status.status !== "SUCCESS") {
-        let message = "Payment failed or was not completed.";
-
-        if (result.error?.message) {
-          message = result.error.message;
-        } else if (status.status === "FAILED") {
-          message = "Payment failed. Please try again.";
-        } else if (status.status === "PENDING") {
-          message = "Payment is pending. Please wait or contact support.";
-        }
-
-        return {
-          success: false,
-          message: `${message} (Status: ${status.status})`,
-        };
-      }
-
-      // Optional: log redirect
-      if (result.redirect) {
-        console.log("Payment redirect in progress...");
-      }
-
-      // Payment successful
-      return await makeApiRequest('/orders', {
-        method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({
-          items: cartData.items,
-          billing_address: formatAddress(addressData.billing),
-          shipping_address: formatAddress(addressData.shipping),
-          payment_method: getSelectedPaymentMethod(),
-          notes: document.getElementById('order-notes')?.value || '',
-          shipping_charges: parseInt(document.getElementById('checkout-shipping').textContent, 10)
-        })
-      });
+    // Handle case where user closes modal/cancels payment
+    if (!result) {
+      console.log("Payment cancelled by user");
+      return {
+        success: false,
+        message: "Payment was cancelled. Please try again.",
+        cancelled: true
+      };
     }
 
-    // If result is null or undefined
-    return {
-      success: false,
-      message: "No response from payment gateway. Please try again.",
-    };
+    // Check payment status
+    const status = await getCashfreePaymentStatus(orderId);
+    console.log("Payment status:", status);
+
+    // Handle errors or unsuccessful payment
+    if (result.error || status.status !== "SUCCESS") {
+      let message = "Payment failed or was not completed.";
+
+      if (result.error?.message) {
+        message = result.error.message;
+      } else if (status.status === "FAILED") {
+        message = "Payment failed. Please try again.";
+      } else if (status.status === "PENDING") {
+        message = "Payment is pending. Please wait or contact support.";
+      } else if (status.status === "CANCELLED") {
+        message = "Payment was cancelled.";
+      }
+
+      return {
+        success: false,
+        message: `${message} (Status: ${status.status})`,
+      };
+    }
+
+    // Optional: log redirect
+    if (result.redirect) {
+      console.log("Payment redirect in progress...");
+    }
+
+    // Payment successful - create order
+    return await makeApiRequest('/orders', {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({
+        items: cartData.items,
+        billing_address: formatAddress(addressData.billing),
+        shipping_address: formatAddress(addressData.shipping),
+        payment_method: getSelectedPaymentMethod(),
+        notes: document.getElementById('order-notes')?.value || '',
+        shipping_charges: parseInt(document.getElementById('checkout-shipping').textContent, 10)
+      })
+    });
 
   } catch (error) {
     console.error("Payment process error:", error.message);
+    
+    // Handle timeout specifically
+    if (error.message === 'Payment timeout') {
+      return {
+        success: false,
+        message: "Payment session timed out. Please try again.",
+      };
+    }
+    
     return {
       success: false,
       message: error.message || "An unexpected error occurred during payment.",
     };
   }
 }
-
 
 
 // Optional helper: API order submission
