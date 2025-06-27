@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zxx">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>The Bird Cart || Home Page</title>
+    <meta name="author" content="" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="robots" content="INDEX,FOLLOW" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
+    <link rel="preconnect" href="https://fonts.googleapis.com/" />
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <!-- font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&amp;family=Source+Sans+3:ital,wght@0,200..900;1,200..900&amp;display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/app.min.css" />
+    <link rel="stylesheet" href="assets/css/fontawesome.min.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="engine1/style.css" />
+</head>
+
+<body>
+
+    <!-- <div id="loader">
+        <div class="spinner"></div>
+    </div> -->
+
+    <!-- mobile menu -->
+    <div class="ot-menu-wrapper">
+        <div class="ot-menu-area text-center">
+            <button class="ot-menu-toggle"><i class="fal fa-times"></i></button>
+            <div class="mobile-logo">
+                <a href="index.html"><img src="assets/img/logo.webp" alt="logo.webp" /></a>
+            </div>
+            <div class="ot-mobile-menu">
+                <ul>
+                    <li class="menu-item-has-children">
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li><a href="about-us.html">About Us</a></li>
+                    <li class="menu-item-has-children catMenu ot-item-has-children ot-active" id="catmenuMob">
+                        <a href="javascript:(void);">Categories</a>
+                    </li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- mobile cart -->
+    <div class="sidemenu-wrapper sidemenu-cart">
+        <div class="sidemenu-content">
+            <button class="closeButton sideMenuCls">
+                <i class="far fa-times"></i>
+            </button>
+            <div class="widget woocommerce widget_shopping_cart">
+                <h3 class="widget_title">Shopping cart</h3>
+                <div class="widget_shopping_cart_content">
+                    <ul class="woocommerce-mini-cart cart_list product_list_widget">
+
+                    </ul>
+                    <p class="woocommerce-mini-cart__total total">
+                        <strong>Subtotal:</strong>
+                        <span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol"
+                                id="mini-cart-subtotal">Rs</span></span>
+                    </p>
+                    <p class="woocommerce-mini-cart__buttons buttons">
+                        <a href="cart.html" class="ot-btn wc-forward">View cart</a>
+                        <a href="checkout.html" class="ot-btn checkout wc-forward">Checkout</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <header class="ot-header header-layout1">
+        <div class="header-top">
+            <div class="container">
+                <div class="row justify-content-center justify-content-lg-between align-items-center gy-2">
+                    <div class="col-auto d-none d-lg-block">
+                        <div class="header-links">
+                            <ul>
+                                <li>
+                                    <i class="fas fa-location-dot"></i>
+                                    <a target="_blank" href="#">New Delhi, India</a>
+                                </li>
+                                <li>
+                                    <i class="fas fa-envelope"></i>
+                                    <a href="mailto:thebirdscart@gmail.com">thebirdscart@gmail.com</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-auto d-xl-block">
+                        <div class="header-links">
+                            <ul>
+                                <li class="login-dropdown">
+                                    <i class="fal fa-user"></i> <a href="signup.html">Login</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sticky-wrapper">
+            <div class="menu-area">
+                <div class="container">
+                    <div class="row align-items-center justify-content-between">
+                        <div class="col-auto">
+                            <div class="header-logo">
+                                <a href="index.html"><img src="assets/img/logo.webp" alt="" /></a>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <nav class="main-menu d-none d-lg-inline-block">
+                                <ul>
+                                    <li><a href="index.html">Home</a></li>
+                                    <li><a href="about-us.html">About Us</a></li>
+                                    <li><a href="shop.html">Shops</a></li>
+                                    <li class="menu-item-has-children catMenu" id="catmenu">
+                                        <a href="javascript:(void);">Categories</a>
+                                    </li>
+                                    <li><a href="contact.html">Contact Us</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <div class="col-auto">
+                            <div class="header-button">
+                                <button type="button" class="icon-btn sideMenuCart" onclick="renderMiniCart(event)">
+                                    <span class="badge" id="miniCartItemsLength">0</span>
+                                    <i class="far fa-basket-shopping"></i>
+                                </button>
+                                <button type="button" class="ot-menu-toggle d-block d-lg-none"><i
+                                        class="far fa-bars"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="error-main-section">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+
+        <div class="container">
+            <div class="error-code">404</div>
+            <h1 class="error-title">Oops! Page Not Found</h1>
+            <p class="error-message">
+                The page you're looking for seems to have wandered off into the digital wilderness.
+                Don't worry though, we'll help you find your way back home.
+            </p>
+            <div class="btn-container">
+                <a href="/" class="btn">Go Home</a>
+                <a href="/contact" class="btn btn-secondary">Contact Support</a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer-wrapper footer-layout1" data-bg-src="assets/img/bg/footer_bg_1.png">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-contact-wrap">
+                    <div class="footer-contact" data-cue="slideInUp">
+                        <div class="box-icon">
+                            <img src="assets/img/icon/phone.svg" alt="icon" />
+                        </div>
+                        <div class="media-body">
+                            <p class="box-label">Call Us 7/24</p>
+                            <h4 class="box-title">
+                                <a href="tel:+91-9318431190">+91-9318431190</a>
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="footer-contact" data-cue="slideInUp">
+                        <div class="box-icon" data-theme-color="#FE5A86">
+                            <img src="assets/img/icon/email.svg" alt="icon" />
+                        </div>
+                        <div class="media-body">
+                            <p class="box-label">Make a Quote</p>
+                            <h4 class="box-title">
+                                <a href="mailto:thebirdscart@gmail.com">thebirdscart@gmail.com</a>
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="footer-contact" data-cue="slideInUp">
+                        <div class="box-icon" data-theme-color="#FC800A">
+                            <img src="assets/img/icon/time.svg" alt="icon" />
+                        </div>
+                        <div class="media-body">
+                            <p class="box-label">Opening Hour</p>
+                            <h4 class="box-title">Everyday: 9 aM - 6 pM</h4>
+                        </div>
+                    </div>
+                    <div class="footer-contact" data-cue="slideInUp">
+                        <div class="box-icon" data-theme-color="#16C4E3">
+                            <img src="assets/img/icon/location.svg" alt="icon" />
+                        </div>
+                        <div class="media-body">
+                            <p class="box-label">Our Location</p>
+                            <h4 class="box-title">
+                                New Delhi, India
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="widget-area">
+            <div class="container">
+                <div class="row justify-content-between">
+                    <div class="col-md-6 col-xl-auto" data-cue="slideInUp">
+                        <div class="widget footer-widget">
+                            <div class="ot-widget-about">
+                                <div class="about-logo">
+                                    <a href="index.html"><img src="assets/img/footerLogo.webp" alt="logo.webp" /></a>
+                                </div>
+                                <p class="about-text">
+                                    Phasellus ultricies aliquam volutpat ullamcorper laoreet
+                                    neque, alacinia curabitur lacinia mollis
+                                </p>
+                                <div class="ot-social">
+                                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                                    <a href="#"><i class="fab fa-twitter"></i></a>
+                                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                    <a href="#"><i class="fab fa-youtube"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-auto" data-cue="slideInUp">
+                        <div class="widget widget_nav_menu footer-widget">
+                            <h3 class="widget_title">Quick Links</h3>
+                            <div class="menu-all-pages-container">
+                                <ul class="menu">
+                                    <li><a href="index.html">Home</a></li>
+                                    <li><a href="about-us.html">About Us</a></li>
+                                    <li><a href="shop.html">Shop</a></li>
+                                    <li><a href="contact.html">Contact Us</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-auto" data-cue="slideInUp">
+                        <div class="widget widget_nav_menu footer-widget">
+                            <h3 class="widget_title">My Account</h3>
+                            <div class="menu-all-pages-container">
+                                <ul class="menu">
+                                    <li><a href="cart.html">Cart Page</a></li>
+                                    <li><a href="checkout.html">Checkout</a></li>
+                                    <li><a href="signup.html">Sign Up</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-auto" data-cue="slideInUp">
+                        <div class="widget widget_nav_menu footer-widget">
+                            <h3 class="widget_title">Other Pages</h3>
+                            <div class="menu-all-pages-container">
+                                <ul class="menu">
+                                    <li><a href="terms.html">Terms & Conditions</a></li>
+                                    <li><a href="privacy.html">Privacy Policy</a></li>
+                                    <li><a href="shipping.html">Shipping & Payment Policy</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright-wrap bg-theme">
+            <div class="container text-center">
+                <div class="row gy-3 justify-content-between align-items-center">
+                    <div class="col-md-auto" data-cue="slideInUp">
+                        <p class="copyright-text">
+                            <i class="fal fa-copyright"></i> Copyright 2025
+                            <a href="index.html">The Bird Cart</a>. All Rights
+                            Reserved.
+                        </p>
+                    </div>
+                    <div class="col-md-auto">
+                        <div class="payment-methods" data-cue="slideInUp">
+                            <img src="assets/img/normal/payments.png" alt="Icon" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <div class="scroll-top">
+        <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" style="
+            transition: stroke-dashoffset 10ms linear 0s;
+            stroke-dasharray: 307.919, 307.919;
+            stroke-dashoffset: 307.919;
+          "></path>
+        </svg>
+    </div>
+    <!-- change password -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <h2>Change Password</h2>
+            <form id="passwordForm">
+                <input type="password" id="oldPassword" placeholder="Old Password" required>
+                <input type="password" id="newPassword" placeholder="New Password" required>
+                <input type="password" id="reNewPassword" placeholder="Retype Password" required>
+                <button type="submit" onclick="changePassword(event)">Submit</button>
+
+            </form>
+        </div>
+    </div>
+    <!-- change password -->
+    <script src="assets/js/vendor/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/app.min.js"></script>
+    <script src="assets/js/particles-config.js"></script>
+    <script src="assets/js/main.js"></script>
+    <!-- wow slider -->
+    <script type="text/javascript" src="engine1/wowslider.js"></script>
+    <script type="text/javascript" src="engine1/script.js"></script>
+    <!-- connect js -->
+    <script src="assets/js/connect.js"></script>
+</body>
+
+</html>
