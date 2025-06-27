@@ -2396,5 +2396,18 @@ function getSelectedPaymentMethod() {
 }
 
 
-let subMenuOne = document.querySelectorAll(".subMenuOne");
-let subMenuTwo = document.querySelectorAll(".subMenuTwo");
+$(document).ready(function () {
+  $(".MobileMenuMain").each(function (index) {
+    $(this).on("click", function (e) {
+      e.stopPropagation();
+      $(".subMenuOne").eq(index).slideToggle();
+    });
+  });
+
+  $(".subMenuOne").each(function (index) {
+    $(this).on("click", function (e) {
+      e.stopPropagation();
+      $(".subMenuTwo").eq(index).slideToggle();
+    });
+  });
+});
