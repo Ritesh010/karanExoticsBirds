@@ -869,7 +869,7 @@
         display: none;
     }
     
-    #trendingItemRow{
+    #trendingItemRow .row{
         position: inherit !important;
         height: inherit !important;
     }
