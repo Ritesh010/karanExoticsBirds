@@ -2394,3 +2394,51 @@ function getSelectedPaymentMethod() {
 
   return 'CashFree';
 }
+
+
+// $(document).ready(function () {
+//   $(".MobileMenuMain").each(function (index) {
+//     $(this).on("click", function (e) {
+//       e.stopPropagation();
+//       $(".subMenuOne").eq(index).slideToggle();
+//     });
+//   });
+
+//   $(".subMenuOne").each(function (index) {
+//     $(this).on("click", function (e) {
+//       e.stopPropagation();
+//       $(".subMenuTwo").eq(index).slideToggle();
+//     });
+//   });
+// });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const menuItems = document.querySelectorAll(".MobileMenuMain");
+  const subMenusOne = document.querySelectorAll(".subMenuOne");
+  const subMenusTwo = document.querySelectorAll(".subMenuTwo");
+
+  menuItems.forEach((menu, index) => {
+    menu.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const subMenu = subMenusOne[index];
+      if (subMenu.style.display === "block") {
+        subMenu.style.display = "none";
+      } else {
+        subMenu.style.display = "block";
+      }
+    });
+  });
+
+  subMenusOne.forEach((submenu, index) => {
+    submenu.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const subMenu2 = subMenusTwo[index];
+      if (subMenu2.style.display === "block") {
+        subMenu2.style.display = "none";
+      } else {
+        subMenu2.style.display = "block";
+      }
+    });
+  });
+});
