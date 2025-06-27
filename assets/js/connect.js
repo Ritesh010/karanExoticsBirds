@@ -241,7 +241,7 @@ function showSuccessLoader(message, autoHide = 2000) {
 }
 
 function showErrorLoader(message, autoHide = 3000) {
-  // showLoader(message, { type: 'error', autoHide });
+  showLoader(message, { type: 'error', autoHide });
 }
 
 function showProgressLoader(message, progress = 0) {
@@ -2235,7 +2235,7 @@ async function placeOrder(event) {
     console.log(orderResult)
     showProgressLoader('Finalizing order...', 100);
 
-    if (orderResult.success) {
+    if (orderResult.order || orderResult.success) {
       console.log('Order placed successfully:', orderResult);
       showSuccessLoader(`Order placed successfully! Order ID: ${orderResult.order?.order_number || 'N/A'}`, 3000);
       setTimeout(() => {
