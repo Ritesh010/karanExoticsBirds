@@ -75,11 +75,11 @@ async function getOrderTotal() {
     const cartData = await getCart();
     let subtotal = 0;
     let costs = await updateCheckoutTotalsWithShipping(subtotal, cartData.items);
-    return costs.total;
+    console.log(costs)
+    return subtotal;
   } catch (error) {
     console.error('Error rendering checkout cart:', error);
-    cartBody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Failed to load cart. Please try again.</td></tr>';
-  }
+ }
 }
 
 async function submitOrder(cartData, addressData) {
