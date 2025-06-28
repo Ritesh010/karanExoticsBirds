@@ -22,7 +22,7 @@ async function getCashfreePaymentLink(customerId, customerPhone, orderAmount) {
 
       const sessionId = data.paymentSessionId;
       const orderId = data.orderId;
-      console.log("✅ Payment Link:", sessionId);
+      // console.log("✅ Payment Link:", sessionId);
       // Now you can use the variables elsewhere in your code
       return { sessionId, orderId };
     } else {
@@ -75,7 +75,7 @@ async function getOrderTotal() {
     const cartData = await getCart();
     let subtotal = 0;
     let costs = await updateCheckoutTotalsWithShipping(subtotal, cartData.items);
-    console.log(costs.total+cartData.cart_total)
+    // console.log(costs.total+cartData.cart_total)
     return costs.total+cartData.cart_total;
   } catch (error) {
     console.error('Error rendering checkout cart:', error);
@@ -104,7 +104,7 @@ async function submitOrder(cartData, addressData) {
       redirectTarget: "_modal",
     };
 
-    console.log("Starting payment with:", checkoutOptions);
+    // console.log("Starting payment with:", checkoutOptions);
 
     // Step 2: Launch checkout with timeout
     const result = await Promise.race([
@@ -116,7 +116,7 @@ async function submitOrder(cartData, addressData) {
 
     // Handle case where user closes modal/cancels payment
     if (!result) {
-      console.log("Payment cancelled by user");
+      // console.log("Payment cancelled by user");
       return {
         success: false,
         message: "Payment was cancelled. Please try again.",
@@ -126,7 +126,7 @@ async function submitOrder(cartData, addressData) {
 
     // Check payment status
     const status = await getCashfreePaymentStatus(orderId);
-    console.log("Payment status:", status);
+    // console.log("Payment status:", status);
 
     // Handle errors or unsuccessful payment
     if (result.error || status.status !== "SUCCESS") {
@@ -150,7 +150,7 @@ async function submitOrder(cartData, addressData) {
 
     // Optional: log redirect
     if (result.redirect) {
-      console.log("Payment redirect in progress...");
+      // console.log("Payment redirect in progress...");
     }
 
     // Payment successful - create order
