@@ -70,12 +70,23 @@ async function getCashfreePaymentStatus(order_id) {
   }
 }
 
+async function getOrderTotal() {
+  try {
+    const cartData = await getCart();
+    let subtotal = 0;
+    let costs = await updateCheckoutTotalsWithShipping(subtotal, cartData.items);
+    return costs.total;
+  } catch (error) {
+    console.error('Error rendering checkout cart:', error);
+    cartBody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Failed to load cart. Please try again.</td></tr>';
+  }
+}
 
 async function submitOrder(cartData, addressData) {
   try {
     const name = sessionStorage.getItem('firstName') || 'Guest';
     const phone = sessionStorage.getItem('phone') || '';
-    const cartTotal = document.getElementById('checkout-total')?.textContent;
+    const cartTotal = await getOrderTotal() || document.getElementById('checkout-total')?.textContent;
 
     if (!cartTotal || !phone || !cartData?.items?.length) {
       return { success: false, message: "Missing required order details." };
@@ -98,7 +109,7 @@ async function submitOrder(cartData, addressData) {
     // Step 2: Launch checkout with timeout
     const result = await Promise.race([
       cashfree.checkout(checkoutOptions),
-      new Promise((_, reject) => 
+      new Promise((_, reject) =>
         setTimeout(() => reject(new Error('Payment timeout')), 300000) // 5 minutes timeout
       )
     ]);
@@ -158,7 +169,7 @@ async function submitOrder(cartData, addressData) {
 
   } catch (error) {
     console.error("Payment process error:", error.message);
-    
+
     // Handle timeout specifically
     if (error.message === 'Payment timeout') {
       return {
@@ -166,7 +177,7 @@ async function submitOrder(cartData, addressData) {
         message: "Payment session timed out. Please try again.",
       };
     }
-    
+
     return {
       success: false,
       message: error.message || "An unexpected error occurred during payment.",

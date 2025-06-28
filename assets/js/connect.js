@@ -486,10 +486,10 @@ async function getProduct(product_id) {
       }, 2000);
       return;
     }
-    console.log('Loading product:', productId);
+    //console.log('Loading product:', productId);
     const data = await makeApiRequest(`/products/${productId}`);
 
-    console.log('Product data loaded successfully:', data);
+    //console.log('Product data loaded successfully:', data);
 
     if (document.title === 'Product Details Page') {
       populateProductData(data);
@@ -586,7 +586,7 @@ async function renderProducts() {
       return;
     }
 
-    console.log(`Rendering ${products.length} products`);
+    //console.log(`Rendering ${products.length} products`);
 
     products.forEach(product => {
       const productCard = createProductCard(product);
@@ -1180,7 +1180,7 @@ async function addToCart(product_id, quantity) {
   try {
     showLoader('Adding product to cart...');
 
-    console.log(`Adding product ${product_id} with quantity ${quantity} to cart`);
+    //console.log(`Adding product ${product_id} with quantity ${quantity} to cart`);
 
     await makeApiRequest('/cart/add', {
       method: 'POST',
@@ -1247,7 +1247,7 @@ async function updateProductInCart(product_id, quantity) {
 
   try {
     showLoader('Updating cart...');
-    console.log(`Updating product ${product_id} quantity to ${quantity}`);
+    //console.log(`Updating product ${product_id} quantity to ${quantity}`);
 
     await makeApiRequest('/cart/update', {
       method: 'PUT',
@@ -1287,7 +1287,7 @@ async function deleteProductFromCart(product_id) {
 
   try {
     // showLoader('Removing product from cart...');
-    console.log(`Removing product ${product_id} from cart`);
+    //console.log(`Removing product ${product_id} from cart`);
 
     await makeApiRequest(`/cart/remove/${product_id}`, {
       method: 'DELETE',
@@ -1367,7 +1367,7 @@ async function renderCart() {
     });
 
     updateSubTotal(total);
-    console.log(`Cart rendered with ${cartData.items.length} items, total: Rs${total.toFixed(2)}`);
+    //console.log(`Cart rendered with ${cartData.items.length} items, total: Rs${total.toFixed(2)}`);
     //showSuccessLoader(`Cart loaded with ${cartData.items.length} items!`, 1500);
   } catch (error) {
     console.error('Error rendering cart:', error);
@@ -1802,14 +1802,14 @@ async function loadCustomerAddresses() {
       headers: getAuthHeaders()
     });
 
-    console.log('Customer addresses loaded:', data);
+    //console.log('Customer addresses loaded:', data);
 
     if (data.addresses && data.addresses.length > 0) {
       populateAddressFields(data.addresses);
     }
   } catch (error) {
     if (error.message.includes('404')) {
-      console.log('No addresses found for customer');
+      //console.log('No addresses found for customer');
     } else {
       console.error('Error loading addresses:', error);
     }
@@ -1903,7 +1903,7 @@ async function saveCustomerAddress(addressType, addressData) {
       })
     });
 
-    console.log(`${addressType} address saved:`, result);
+    //console.log(`${addressType} address saved:`, result);
     return result;
   } catch (error) {
     console.error(`Error saving ${addressType} address:`, error);
@@ -1940,7 +1940,7 @@ async function renderCheckoutCartWithShipping() {
     });
 
     updateCheckoutTotalsWithShipping(subtotal, cartData.items);
-    console.log(`Checkout cart rendered with ${cartData.items.length} items`);
+    //console.log(`Checkout cart rendered with ${cartData.items.length} items`);
   } catch (error) {
     console.error('Error rendering checkout cart:', error);
     cartBody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Failed to load cart. Please try again.</td></tr>';
@@ -2165,7 +2165,7 @@ function createDefaultItemShipping(item) {
   };
 }
 
-function updateCheckoutTotalsWithShipping(subtotal, cartItems) {
+async function updateCheckoutTotalsWithShipping(subtotal, cartItems) {
   const shippingResult = calculateShipping(cartItems, subtotal);
   const shipping = shippingResult.cost;
   const taxRate = 0.0;
@@ -2174,8 +2174,8 @@ function updateCheckoutTotalsWithShipping(subtotal, cartItems) {
 
   updateCheckoutDisplayElements(subtotal, shipping, tax, total, shippingResult);
 
-  console.log('Shipping calculation:', shippingResult);
-  console.log(`Checkout totals - Subtotal: Rs${subtotal.toFixed(0)}, Shipping: Rs${shipping.toFixed(0)}, Total: Rs${total.toFixed(0)}`);
+  //console.log('Shipping calculation:', shippingResult);
+  //console.log(`Checkout totals - Subtotal: Rs${subtotal.toFixed(0)}, Shipping: Rs${shipping.toFixed(0)}, Total: Rs${total.toFixed(0)}`);
 
   return {
     subtotal: subtotal,
@@ -2261,7 +2261,7 @@ async function placeOrder(event) {
     updateSubmitButton(submitButton, true);
     showLoader('Processing your order...');
 
-    console.log('Fetching cart items...');
+    //console.log('Fetching cart items...');
     const cartData = await getCart();
 
     if (!cartData || !cartData.items || cartData.items.length === 0) {
@@ -2277,13 +2277,13 @@ async function placeOrder(event) {
 
     // Show progress for placing order
     showProgressLoader('Placing order...', 75);
-    console.log('Placing order...');
+    //console.log('Placing order...');
     const orderResult = await submitOrder(cartData, addressData);
-    console.log(orderResult)
+    //console.log(orderResult)
     showProgressLoader('Finalizing order...', 100);
 
     if (orderResult.order || orderResult.success) {
-      console.log('Order placed successfully:', orderResult);
+      //console.log('Order placed successfully:', orderResult);
       showSuccessLoader(`Order placed successfully! Order ID: ${orderResult.order?.order_number || 'N/A'}`, 3000);
       setTimeout(() => {
         window.location.href = 'index.html';
