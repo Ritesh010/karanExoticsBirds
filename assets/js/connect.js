@@ -491,7 +491,7 @@ async function getProduct(product_id) {
 
     //console.log('Product data loaded successfully:', data);
 
-    if (document.title === 'Product Details Page') {
+    if (document.title === 'The Bird Cart || Product Details') {
       populateProductData(data);
     } else {
       return data;
