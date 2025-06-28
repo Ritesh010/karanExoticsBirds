@@ -75,8 +75,8 @@ async function getOrderTotal() {
     const cartData = await getCart();
     let subtotal = 0;
     let costs = await updateCheckoutTotalsWithShipping(subtotal, cartData.items);
-    console.log(costs)
-    return subtotal;
+    console.log(costs.total+cartData.cart_total)
+    return costs.total+cartData.cart_total;
   } catch (error) {
     console.error('Error rendering checkout cart:', error);
  }
