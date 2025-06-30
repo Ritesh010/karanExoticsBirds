@@ -86,7 +86,7 @@ async function submitOrder(cartData, addressData) {
   try {
     const name = sessionStorage.getItem('firstName') || 'Guest';
     const phone = sessionStorage.getItem('phone') || '';
-    const cartTotal = 1//await getOrderTotal() || document.getElementById('checkout-total')?.textContent;
+    const cartTotal = await getOrderTotal() || document.getElementById('checkout-total')?.textContent;
 
     if (!cartTotal || !phone || !cartData?.items?.length) {
       return { success: false, message: "Missing required order details." };
