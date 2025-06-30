@@ -733,7 +733,7 @@ function createHoverContentDiv(productData) {
 
   const cartButton = createAddToCartButton(productData.product_id);
   if (productData.stock_quantity == 0) {
-    cartButton.setAttribute(disabled)
+cartButton.setAttribute("disabled", "true");
   }
   title.appendChild(link);
   hoverDiv.appendChild(title);
@@ -843,7 +843,7 @@ function createProductActionDiv(productData) {
   const cartIcon = document.createElement('i');
   cartIcon.className = 'fa-light fa-basket-shopping me-1';
   if (productData.stock_quantity == 0) {
-    cartButton.setAttribute(disabled)
+cartButton.setAttribute("disabled", "true");
   }
   cartButton.appendChild(cartIcon);
   cartButton.appendChild(document.createTextNode(' Add To Cart'));
