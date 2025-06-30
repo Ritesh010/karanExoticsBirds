@@ -732,7 +732,9 @@ function createHoverContentDiv(productData) {
     : 'Price not available';
 
   const cartButton = createAddToCartButton(productData.product_id);
-
+  if (productData.stock_quantity == 0) {
+    cartButton.setAttribute(disabled)
+  }
   title.appendChild(link);
   hoverDiv.appendChild(title);
   hoverDiv.appendChild(price);
@@ -840,7 +842,9 @@ function createProductActionDiv(productData) {
 
   const cartIcon = document.createElement('i');
   cartIcon.className = 'fa-light fa-basket-shopping me-1';
-
+  if (productData.stock_quantity == 0) {
+    cartButton.setAttribute(disabled)
+  }
   cartButton.appendChild(cartIcon);
   cartButton.appendChild(document.createTextNode(' Add To Cart'));
   actionDiv.appendChild(cartButton);
@@ -1196,7 +1200,7 @@ async function addToCart(product_id, quantity) {
     if (error.message.includes('401')) {
       handleAuthError();
     } else {
-      showErrorLoader(`Failed to add product to cart: ${error.error}`);
+      showErrorLoader(`Failed to add product to cart: ${error.message}`);
     }
   }
 }
