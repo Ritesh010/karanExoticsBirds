@@ -846,11 +846,13 @@
     }
 }
 
-.trendingItemNew {
-    position: relative;
-    background: #DFF8F6;
-    padding: 110px 0px;
+.trendingItemSection{    
     margin-top: 80px;
+}
+
+.trendingItemSection .trendingItemBird img {
+    border-radius: 50px;
+    box-shadow: -1px 2px 20px 2px rgb(0 0 0 / 10%);
 }
 
 #recent-item {
