@@ -846,6 +846,13 @@
     }
 }
 
+.trendingItemNew {
+    position: relative;
+    background: #DFF8F6;
+    padding: 110px 0px;
+    margin-top: 80px;
+}
+
 @media (max-width: 768px) {
     .error-main-section .container {
         padding: 1.5rem;
@@ -868,8 +875,8 @@
     .trendingItemDiv {
         display: none;
     }
-    
-    #trendingItemRow .row{
+
+    #trendingItemRow .row {
         position: inherit !important;
         height: inherit !important;
     }
