@@ -469,7 +469,7 @@ async function getProducts() {
     return data.products || [];
   } catch (error) {
     console.error('Error fetching products:', error);
-    showErrorLoader('Failed to load products. Please check your connection and try again.');
+    // showErrorLoader('Failed to load products. Please check your connection and try again.');
     return [];
   }
 }
@@ -516,7 +516,7 @@ async function getProductsbyAttribute(key, value) {
     return data.products || [];
   } catch (error) {
     console.error('Error fetching products:', error);
-    showErrorLoader('Failed to load products. Please check your connection and try again.');
+    // showErrorLoader('Failed to load products. Please check your connection and try again.');
     return [];
   }
 }
@@ -527,7 +527,7 @@ async function getTopAttributes() {
     return data.top_attributes || [];
   } catch (error) {
     console.error('Error fetching products:', error);
-    showErrorLoader('Failed to load products. Please check your connection and try again.');
+    // showErrorLoader('Failed to load products. Please check your connection and try again.');
     return [];
   }
 }
@@ -545,7 +545,7 @@ async function topAndTrending() {
     };
   } catch (error) {
     console.error('Error fetching products:', error);
-    showErrorLoader('Failed to load products. Please check your connection and try again.');
+    // showErrorLoader('Failed to load products. Please check your connection and try again.');
     return { topSellingItems: [], recentItems: [] };
   }
 }
