@@ -197,8 +197,7 @@
                                             class="form-control bg-white" required></textarea>
                                     </div>
                                     <div class="form-btn col-12 mt-10">
-                                        <button class="ot-btn" type="submit">Send Message <i
-                                                class="fas fa-arrow-right ms-2"></i></button>
+                                        <button class="ot-btn" type="submit">Send Message</button>
                                     </div>
                                 </div>
                             </form>
@@ -214,33 +213,33 @@
             var email = document.getElementById("email").value.trim();
             var message = document.getElementById("message").value.trim();
 
-            if (name === "" || email === "" || message === "") {
+            if (!name || !email || !message) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Please fill all fields!',
-                    text: 'Name, Email, and Message are required.'
+                    title: 'Missing Fields',
+                    text: 'Please fill in all fields.'
                 });
                 return;
             }
 
-            // ✅ Your target WhatsApp number
-            var phoneNumber = "918178333066"; 
+            // Format the message
+            var finalMessage = `Name: ${name}\nEmail: ${email}\nMessage: ${message}`;
+            var encodedMessage = encodeURIComponent(finalMessage);
 
-            // Encode the message properly
-            var fullMessage = `Name: ${name}%0AEmail: ${email}%0AMessage: ${message}`;
+            var phoneNumber = "919318431190";
 
-            var whatsappURL = `https://wa.me/${phoneNumber}?text=${fullMessage}`;
+            var whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 
-            // Try to open WhatsApp and show success popup
+            // Open WhatsApp chat
             window.open(whatsappURL, '_blank');
 
             Swal.fire({
                 icon: 'success',
-                title: 'Opening WhatsApp...',
-                text: 'Your message is ready to send.'
+                title: 'Redirecting...',
+                text: 'WhatsApp is opening with your message.'
             });
 
-            // Optional: reset form after success
+            // Reset the form
             document.getElementById("name").value = "";
             document.getElementById("email").value = "";
             document.getElementById("message").value = "";
