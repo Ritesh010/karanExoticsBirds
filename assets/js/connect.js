@@ -1196,7 +1196,7 @@ async function addToCart(product_id, quantity) {
     if (error.message.includes('401')) {
       handleAuthError();
     } else {
-      showErrorLoader(`Failed to add product to cart: ${error.message}`);
+      showErrorLoader(`Failed to add product to cart: ${error.error}`);
     }
   }
 }
