@@ -171,7 +171,8 @@
                                     <div class="box-icon"><i class="fas fa-envelope"></i></div>
                                     <div class="media-body">
                                         <p class="box-label">Email</p>
-                                        <h4 class="box-title"><a href="mailto:thebirdscart@gmail.com">thebirdscart@gmail.com</a>
+                                        <h4 class="box-title"><a
+                                                href="mailto:thebirdscart@gmail.com">thebirdscart@gmail.com</a>
                                         </h4>
                                     </div>
                                 </div>
@@ -181,19 +182,25 @@
                     <div class="col-lg-8">
                         <div class="contact-form1">
                             <h4 class="contact-form-title">Get In Touch</h4>
-                            <form action="#" method="POST" class="input-label ajax-contact">
+                            <form onsubmit="sendToWhatsApp(); return false;" class="input-label">
                                 <div class="row">
-                                    <div class="form-group col-sm-6"><input type="text" class="form-control bg-white"
-                                            placeholder="Your Name" name="name" id="name" required=""></div>
-                                    <div class="form-group col-sm-6"><input type="email" class="form-control bg-white"
-                                            placeholder="Your Email" name="email" id="email" required=""></div>
-                                    <div class="form-group col-12"><textarea name="message" id="message" cols="30"
-                                            placeholder="Write Message" rows="3" class="form-control bg-white"
-                                            required=""></textarea></div>
-                                    <div class="form-btn col-12 mt-10"><button class="ot-btn">Sent Massage <i
-                                                class="fas fa-arrow-right ms-2"></i></button></div>
+                                    <div class="form-group col-sm-6">
+                                        <input type="text" class="form-control bg-white" placeholder="Your Name"
+                                            name="name" id="name" required>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <input type="email" class="form-control bg-white" placeholder="Your Email"
+                                            name="email" id="email" required>
+                                    </div>
+                                    <div class="form-group col-12">
+                                        <textarea name="message" id="message" cols="30" placeholder="Write Message"
+                                            rows="3" class="form-control bg-white" required></textarea>
+                                    </div>
+                                    <div class="form-btn col-12 mt-10">
+                                        <button class="ot-btn" type="submit">Send Message <i
+                                                class="fas fa-arrow-right ms-2"></i></button>
+                                    </div>
                                 </div>
-                                <p class="form-messages mb-0 mt-3"></p>
                             </form>
                         </div>
                     </div>
@@ -201,13 +208,50 @@
             </div>
         </div>
     </div>
+    <script>
+        function sendToWhatsApp() {
+            var name = document.getElementById("name").value.trim();
+            var email = document.getElementById("email").value.trim();
+            var message = document.getElementById("message").value.trim();
+
+            if (name === "" || email === "" || message === "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please fill all fields before sending.'
+                });
+                return;
+            }
+
+            var phoneNumber = "7683098347"; // ✅ Replace with your WhatsApp number
+            var text = `Name: ${name}%0AEmail: ${email}%0AMessage: ${message}`;
+            var whatsappURL = `https://wa.me/${phoneNumber}?text=${text}`;
+
+            // Open WhatsApp and show success alert
+            window.open(whatsappURL, '_blank');
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Message Sent!',
+                text: 'WhatsApp has been opened with your message.'
+            });
+
+            // Optional: Reset form
+            document.getElementById("name").value = '';
+            document.getElementById("email").value = '';
+            document.getElementById("message").value = '';
+        }
+    </script>
     <div class="">
         <div class="contact-map">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d213246.06020267194!2d77.04417347155065!3d28.52725273882469!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfd5b347eb62d%3A0x52c2b7494e204dce!2sNew%20Delhi%2C%20Delhi!5e1!3m2!1sen!2sin!4v1751266488488!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d213246.06020267194!2d77.04417347155065!3d28.52725273882469!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfd5b347eb62d%3A0x52c2b7494e204dce!2sNew%20Delhi%2C%20Delhi!5e1!3m2!1sen!2sin!4v1751266488488!5m2!1sen!2sin"
+                width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
     </div>
     <footer class="footer-wrapper footer-layout1" data-bg-src="assets/img/bg/footer_bg_1.png">
-        
+
         <div class="container">
             <div class="footer-top">
                 <div class="footer-contact-wrap">
@@ -263,10 +307,11 @@
                         <div class="widget footer-widget">
                             <div class="ot-widget-about">
                                 <div class="about-logo">
-                                    <a href="index.html"><img src="assets/img/footerLogo.webp" alt="logo.webp"/></a>
+                                    <a href="index.html"><img src="assets/img/footerLogo.webp" alt="logo.webp" /></a>
                                 </div>
                                 <p class="about-text">
-                                    Explore our delightful collection of bird toys and accessories online, where every feathered friend finds their perfect playmate!
+                                    Explore our delightful collection of bird toys and accessories online, where every
+                                    feathered friend finds their perfect playmate!
                                 </p>
                                 <div class="ot-social">
                                     <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -341,7 +386,7 @@
                 style="transition: stroke-dashoffset 10ms linear 0s; stroke-dasharray: 307.919, 307.919; stroke-dashoffset: 307.919;">
             </path>
         </svg></div>
-        <!-- change password -->
+    <!-- change password -->
     <div id="passwordModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" id="closeModal">&times;</span>
@@ -360,6 +405,7 @@
     <script src="assets/js/app.min.js"></script>
     <script src="assets/js/particles-config.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="assets/js/connect.js"></script>
 </body>
 
