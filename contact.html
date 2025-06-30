@@ -186,15 +186,15 @@
                                 <div class="row">
                                     <div class="form-group col-sm-6">
                                         <input type="text" class="form-control bg-white" placeholder="Your Name"
-                                            name="name" id="name" required>
+                                            id="name" required>
                                     </div>
                                     <div class="form-group col-sm-6">
                                         <input type="email" class="form-control bg-white" placeholder="Your Email"
-                                            name="email" id="email" required>
+                                            id="email" required>
                                     </div>
                                     <div class="form-group col-12">
-                                        <textarea name="message" id="message" cols="30" placeholder="Write Message"
-                                            rows="3" class="form-control bg-white" required></textarea>
+                                        <textarea id="message" cols="30" placeholder="Write Message" rows="3"
+                                            class="form-control bg-white" required></textarea>
                                     </div>
                                     <div class="form-btn col-12 mt-10">
                                         <button class="ot-btn" type="submit">Send Message <i
@@ -217,29 +217,33 @@
             if (name === "" || email === "" || message === "") {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error!',
-                    text: 'Please fill all fields before sending.'
+                    title: 'Please fill all fields!',
+                    text: 'Name, Email, and Message are required.'
                 });
                 return;
             }
 
-            var phoneNumber = "7683098347"; // ✅ Replace with your WhatsApp number
-            var text = `Name: ${name}%0AEmail: ${email}%0AMessage: ${message}`;
-            var whatsappURL = `https://wa.me/${phoneNumber}?text=${text}`;
+            // ✅ Your target WhatsApp number
+            var phoneNumber = "918178333066"; 
 
-            // Open WhatsApp and show success alert
+            // Encode the message properly
+            var fullMessage = `Name: ${name}%0AEmail: ${email}%0AMessage: ${message}`;
+
+            var whatsappURL = `https://wa.me/${phoneNumber}?text=${fullMessage}`;
+
+            // Try to open WhatsApp and show success popup
             window.open(whatsappURL, '_blank');
 
             Swal.fire({
                 icon: 'success',
-                title: 'Message Sent!',
-                text: 'WhatsApp has been opened with your message.'
+                title: 'Opening WhatsApp...',
+                text: 'Your message is ready to send.'
             });
 
-            // Optional: Reset form
-            document.getElementById("name").value = '';
-            document.getElementById("email").value = '';
-            document.getElementById("message").value = '';
+            // Optional: reset form after success
+            document.getElementById("name").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("message").value = "";
         }
     </script>
     <div class="">
