@@ -846,7 +846,7 @@
     }
 }
 
-.trendingItemSection{    
+.trendingItemSection {
     margin-top: 80px;
 }
 
@@ -858,6 +858,34 @@
 #recent-item {
     position: inherit !important;
     height: auto !important;
+}
+
+.whatsapp-float {
+    position: fixed;
+    bottom: 90px;
+    right: 31px;
+    background-color: #25d366;
+    color: white;
+    border-radius: 50%;
+    font-size: 30px;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    transition: background-color 0.3s;
+    height: 50px;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.whatsapp-float:hover {
+    background-color: #128c7e;
+    color: white;
+}
+
+.whatsapp-icon {
+    font-family: "Font Awesome 5 Brands";
 }
 
 @media (max-width: 768px) {
