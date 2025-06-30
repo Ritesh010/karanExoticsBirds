@@ -192,12 +192,21 @@
                                         <input type="email" class="form-control bg-white" placeholder="Your Email"
                                             id="email" required>
                                     </div>
+                                    <div class="form-group col-sm-6">
+                                        <input type="text" class="form-control bg-white" placeholder="Contact Number"
+                                            id="contact" required>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <input type="text" class="form-control bg-white" placeholder="Subject"
+                                            id="subject" required>
+                                    </div>
                                     <div class="form-group col-12">
                                         <textarea id="message" cols="30" placeholder="Write Message" rows="3"
                                             class="form-control bg-white" required></textarea>
                                     </div>
                                     <div class="form-btn col-12 mt-10">
-                                        <button class="ot-btn" type="submit">Send Message</button>
+                                        <button class="ot-btn" type="submit">Send Message <i
+                                                class="fas fa-arrow-right ms-2"></i></button>
                                     </div>
                                 </div>
                             </form>
@@ -207,44 +216,6 @@
             </div>
         </div>
     </div>
-    <script>
-        function sendToWhatsApp() {
-            var name = document.getElementById("name").value.trim();
-            var email = document.getElementById("email").value.trim();
-            var message = document.getElementById("message").value.trim();
-
-            if (!name || !email || !message) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Missing Fields',
-                    text: 'Please fill in all fields.'
-                });
-                return;
-            }
-
-            // Format the message
-            var finalMessage = `Name: ${name}\nEmail: ${email}\nMessage: ${message}`;
-            var encodedMessage = encodeURIComponent(finalMessage);
-
-            var phoneNumber = "919318431190";
-
-            var whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-
-            // Open WhatsApp chat
-            window.open(whatsappURL, '_blank');
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Redirecting...',
-                text: 'WhatsApp is opening with your message.'
-            });
-
-            // Reset the form
-            document.getElementById("name").value = "";
-            document.getElementById("email").value = "";
-            document.getElementById("message").value = "";
-        }
-    </script>
     <div class="">
         <div class="contact-map">
             <iframe
@@ -410,6 +381,53 @@
     <script src="assets/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="assets/js/connect.js"></script>
+    <script>
+        function sendToWhatsApp() {
+            var name = document.getElementById("name").value.trim();
+            var email = document.getElementById("email").value.trim();
+            var contact = document.getElementById("contact").value.trim();
+            var subject = document.getElementById("subject").value.trim();
+            var message = document.getElementById("message").value.trim();
+
+            // Validation
+            if (!name || !email || !contact || !subject || !message) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Missing Fields',
+                    text: 'Please fill in all fields.'
+                });
+                return;
+            }
+
+            // Format message
+            var finalMessage =
+                `Name: ${name}\n` +
+                `Email: ${email}\n` +
+                `Contact: ${contact}\n` +
+                `Subject: ${subject}\n` +
+                `Message: ${message}`;
+
+            var encodedMessage = encodeURIComponent(finalMessage);
+
+            var phoneNumber = "919318431190";
+            var whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+            window.open(whatsappURL, '_blank');
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Redirecting...',
+                text: 'WhatsApp is opening with your message.'
+            });
+
+            // Reset form
+            document.getElementById("name").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("contact").value = "";
+            document.getElementById("subject").value = "";
+            document.getElementById("message").value = "";
+        }
+    </script>
 </body>
 
 </html>
