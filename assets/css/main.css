@@ -853,6 +853,11 @@
     margin-top: 80px;
 }
 
+#recent-item {
+    position: inherit !important;
+    height: auto !important;
+}
+
 @media (max-width: 768px) {
     .error-main-section .container {
         padding: 1.5rem;
